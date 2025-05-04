@@ -1,40 +1,58 @@
-#include "../../../include/cub3d.h"
+#include "../../include/cub3d.h"
 
-void init_player(t_game *game)
+static int init_mlx(t_game *game)
 {
-    game->player->pos.x = 0;
-    game->player->pos.y = 0;
-    game->player->dir.x = 0;
-    game->player->dir.y = 0;
-    game->player->plane.x = 0;
-    game->player->plane.y = 0;
-}
+    game->mlx = mlx_init(WIDTH, HEIGHT, "cub3D", false);
+    if (!game->mlx)
+    {
+        ft_putstr_fd("Error\nFailed to initialize MLX.\n", 2);
+        return (1);
+    }
+    game->win = game->mlx->window;
+    if (!game->win)
+    {
+        printf("Error: Failed to get the window\n");
+        mlx_terminate(game->mlx);
+        return (1);
+    }
+    game->img = mlx_new_image(game->mlx, WIDTH, HEIGHT);
+    if (!game->img)
+    {
+        mlx_terminate(game->mlx);
+        ft_putstr_fd("Error\nFailed to create image.\n", 2);
+        return (1);
+    }
+    return (0);
+}   
 
 
-
-void init_map(t_game *game)
+int init_game(t_game *game)
 {
-    game->map->map = NULL;
-    game->map->width = 0;
-    game->map->height = 0;
-    game->map->start_dir = 'N';
-    game->map->player_x = 0;
-    game->map->player_y = 0;
-}
+    int     x;
+    int     y;
 
-void init_ray(t_game *game)
-{
-    game->ray->x = 0;
-    game->ray->y = 0;
-    game->ray->map_x = 0;
-    game->ray->map_y = 0;
-    game->ray->side_dist_x = 0;
-    game->ray->side_dist_y = 0;
-    game->ray->delta_dist_x = 0;
-    game->ray->delta_dist_y = 0;
-    game->ray->perp_wall_dist = 0;
-    game->ray->step_x = 0;
-    game->ray->step_y = 0;
-    game->ray->side = 0;
-    game->ray->hit = 0;
+    x = init_mlx(game);
+    if (x)
+    {
+        return (1);
+    }
+    y = 0;
+    while (y < HEIGHT)
+    {
+        x = 0;
+        while (x < WIDTH)
+        {
+            mlx_put_pixel(game->img, x, y, 0x000000FF);
+            x++;
+        }
+        y++;
+    }
+    if (mlx_image_to_window(game->mlx, game->img, 0, 0) == -1)
+    {
+        mlx_delete_image(game->mlx, game->img);
+        mlx_terminate(game->mlx);
+        ft_putstr_fd("Error\nFailed to put image to window.\n", 2);
+        return (1);
+    }
+    return (0);
 }

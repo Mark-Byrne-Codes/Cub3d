@@ -1,20 +1,27 @@
 #include "../../../include/cub3d.h"
 
-void init_mlx(t_game *game)
+
+int init_game(t_game *game)
 {
-    game->mlx = mlx_init(WIDTH, HEIGHT, "Cub3D", true);
+    game->mlx = mlx_init(width, height, "cub3D", false);
     if (!game->mlx)
     {
-        ft_putstr_fd("Error\nFailed to initialize MLX42.\n", 2);
+        ft_putstr_fd("Error\nFailed to initialize MLX.\n", 2);
         return (1);
     }
-    game->graphics->north = mlx_load_png("./assets/north.png");
-    game->graphics->south = mlx_load_png("./assets/south.png");
-    game->graphics->west = mlx_load_png("./assets/west.png");
-    game->graphics->east = mlx_load_png("./assets/east.png");
-    if (!game->graphics->north || !game->graphics->south || !game->graphics->west || !game->graphics->east)
+    game->win = game->mlx->window;
+    game->img = mlx_new_image(game->mlx, WIDTH, HEIGHT);
+    if (!game->img)
     {
-        ft_putstr_fd("Error\nFailed to load textures.\n", 2);
+        mlx_terminate(game->mlx);
+        ft_putstr_fd("Error\nFailed to create image.\n", 2);
+        return (1);
+    }
+    if (mlx_image_to_window(game->mlx, game->img, 0, 0) == -1)
+    {
+        mlx_delete_image(game->mlx, game->img);
+        mlx_terminate(game->mlx);
+        ft_putstr_fd("Error\nFailed to put image to window.\n", 2);
         return (1);
     }
     return (0);

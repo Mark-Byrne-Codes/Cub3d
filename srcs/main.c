@@ -16,10 +16,8 @@ int	main(int argc, char **argv)
 		return (1);
 	}
 	// init_and_validate_map(argv[1]);
-	// init_mlx();
-	// init_game();
-	// run_game();
+	run_game(game);
 
-	clean_exit(game);
+	//clean_exit(game);
 	return (0);
 }

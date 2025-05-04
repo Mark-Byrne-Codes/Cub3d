@@ -76,8 +76,8 @@ typedef struct s_parser
 typedef struct s_game
 {
     mlx_t			*mlx;
-	mlx_window_t	*win;
 	mlx_image_t		*img;
+    void             *win;
     t_player player;
     t_map    map;
     t_ray   ray;
@@ -86,7 +86,7 @@ typedef struct s_game
 }   t_game;
 
 
-void    init_mlx(t_game *game);
+int    init_game(t_game *game);
 void    run_game(t_game *game);
 void    render_graphics(t_game *game);
 void	control_player(mlx_key_data_t keydata, void *param);
