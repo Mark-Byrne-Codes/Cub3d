@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mbyrne <mbyrne@student.hive.fi>            +#+  +:+       +#+         #
+#    By: hahamdan <hahamdan@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/28 14:57:50 by mbyrne            #+#    #+#              #
-#    Updated: 2024/12/09 08:49:16 by mbyrne           ###   ########.fr        #
+#    Updated: 2025/05/05 18:36:54 by hahamdan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@
 
 NAME = libft.a
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g
 
 # Source files for libft
 LIBFT_SRC = ft_isalpha.c ft_isdigit.c ft_isalnum.c ft_isascii.c ft_isprint.c \
@@ -31,8 +31,7 @@ LIBFT_SRC = ft_isalpha.c ft_isdigit.c ft_isalnum.c ft_isascii.c ft_isprint.c \
             ft_lstclear.c ft_lstiter.c
 
 # Source files for get_next_line
-GNL_SRC = get_next_line/get_next_line.c get_next_line/get_next_line_utils.c
-
+GNL_SRC = get_next_line/get_next_line.c 
 # Source files for ft_printf
 FT_PRINTF_SRC = ft_printf/ft_printf.c ft_printf/ft_printf_digits.c ft_printf/ft_printf_char.c
 

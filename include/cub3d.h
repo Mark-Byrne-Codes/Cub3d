@@ -4,13 +4,18 @@
 # include <fcntl.h>
 # include <math.h>
 # include <stdio.h>
-# include "./MLX42/MLX42.h"
+# include <errno.h>
+# include <string.h>
+// # include "./MLX42/MLX42.h"
 # include "../libft/libft.h"
 
 # define WIDTH 1920
 # define HEIGHT 1080
 # define PI 3.14159265358979323846
 
+// # ifndef BUFFER_SIZE
+// #  define BUFFER_SIZE 1024
+// # endif
 
 typedef struct s_ray
 {
@@ -48,17 +53,19 @@ typedef struct s_color
 
 typedef struct s_graphics
 {
-    mlx_image_t north;
-    mlx_image_t south;
-    mlx_image_t west;
-    mlx_image_t east;
+    // mlx_image_t north;
+    // mlx_image_t south;
+    // mlx_image_t west;
+    // mlx_image_t east;
 	t_color		floor_color;
 	t_color		ceiling_color;
 }  t_graphics;
 
 typedef struct s_map
 {
-    char **map;
+	int 	fd;
+	char *file_path;
+    char **map_grid;
     int width;
     int height;
     char start_dir;
@@ -68,14 +75,32 @@ typedef struct s_map
 
 typedef struct s_parser
 {
-// something like this for parsing
+	// char 	**map_grid;
+	// int 	width;
+	// int 	height;
+	// int 	start_pos;
+	// t_graphics s_graphics;
+	// t_map 	map;
+	// int 	fd;
+	// char 	*file_path;
+
 }   t_parser;
+
+typedef enum e_attribute
+{
+	NORTH,
+	SOUTH,
+	EAST,
+	WEST,
+	FLOOR,
+	CEILING
+} t_attribute;
 
 typedef struct s_game
 {
-    mlx_t			*mlx;
-	mlx_window_t	*win;
-	mlx_image_t		*img;
+    // mlx_t			*mlx;
+	// mlx_window_t	*win;
+	// mlx_image_t		*img;
     t_player player;
     t_map    map;
     t_ray   ray;
@@ -86,10 +111,14 @@ typedef struct s_game
 
 void    init_mlx(t_game *game);
 void    run_game(t_game *game);
-void    render_graphics(t_game *game);
-void	control_player(mlx_key_data_t keydata, void *param);
-void    clean_exit(t_game *game);
-void	handle_esc(mlx_key_data_t keydata, t_game *game);
+int read_map(t_game *game, char *argv);
+void 	free_map(t_game *game);
+// void	free_gnl(int fd);
 
-int run_game(argv);
+// void    render_graphics(t_game *game);
+// void	control_player(mlx_key_data_t keydata, void *param);
+// void    clean_exit(t_game *game);
+// void	handle_esc(mlx_key_data_t keydata, t_game *game);
+
+// int run_game(argv);
 #endif

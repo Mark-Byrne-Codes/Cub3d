@@ -1,5 +1,5 @@
 NAME	:= cub3d
-CFLAGS	:= -Wextra -Wall -Werror
+CFLAGS	:= -Wextra -Wall -Werror -g
 CC = cc
 LIBMLX	:= ./MLX42
 LIBFT = libft/libft.a

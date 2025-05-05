@@ -9,17 +9,24 @@ int	main(int argc, char **argv)
 		ft_putstr_fd("Error\nPlease provide a .cub file.\n", 2);
 		return (1);
 	}
-	game = malloc(sizeof(t_game));
+	game = ft_calloc(1, sizeof(t_game));
 	if (!game)
 	{
 		ft_putstr_fd("Error\nFailed to allocate memory for game.\n", 2);
 		return (1);
 	}
+	if (read_map(game, argv[1]) == EXIT_FAILURE)
+		free_map(game);
 	// init_and_validate_map(argv[1]);
 	// init_mlx();
 	// init_game();
-	// run_game();
+	// run_game(g);
 
-	clean_exit(game);
+	// clean_exit(game);
+	
+	if (game)
+		free_map(game);
+	free(game);
+	// // free_gnl(game->map.fd);
 	return (0);
 }
