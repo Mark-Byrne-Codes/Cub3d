@@ -7,7 +7,7 @@ LIBFT = libft/libft.a
 HEADERS	:= -I $(LIBMLX)/include
 LIBS    := $(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm
 		
-SRCS	:= srcs/main.c \
+SRCS	:= srcs/main.c  srcs/game/parsing.c\
 
 OBJS	:= ${SRCS:.c=.o}
 
