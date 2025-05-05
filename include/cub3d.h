@@ -9,6 +9,8 @@
 
 # define WIDTH 1920
 # define HEIGHT 1080
+# define MAP_WIDTH 8
+# define MAP_HEIGHT 8
 # define PI 3.14159265358979323846
 
 
@@ -74,8 +76,8 @@ typedef struct s_parser
 typedef struct s_game
 {
     mlx_t			*mlx;
-	mlx_window_t	*win;
 	mlx_image_t		*img;
+    void             *win;
     t_player player;
     t_map    map;
     t_ray   ray;
@@ -83,10 +85,9 @@ typedef struct s_game
     t_parser parser;
 }   t_game;
 
-
-void    init_mlx(t_game *game);
-void    run_game(t_game *game);
-void    render_graphics(t_game *game);
+int    init_game(t_game *game);
+int   run_game(t_game *game);
+void    render_graphics(void *param);
 void	control_player(mlx_key_data_t keydata, void *param);
 void    clean_exit(t_game *game);
 void	handle_esc(mlx_key_data_t keydata, t_game *game);
