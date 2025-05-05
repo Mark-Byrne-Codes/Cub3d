@@ -1,10 +1,11 @@
 #include "../../include/cub3d.h"
 
-void run_game(t_game *game)
+int run_game(t_game *game)
 {
-    init_game(game);
-    // mlx_key_hook(game->mlx, control_player, game);
-    // mlx_loop_hook(game->mlx, render_graphics, game);
-    mlx_loop(game->mlx);
-    mlx_terminate(game->mlx);
+	if (init_game(game))
+		return (1);
+	mlx_key_hook(game->mlx, control_player, game);
+	mlx_loop_hook(game->mlx, render_graphics, game);
+	mlx_loop(game->mlx);
+	return (0);
 }

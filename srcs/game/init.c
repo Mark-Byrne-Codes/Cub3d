@@ -22,31 +22,19 @@ static int init_mlx(t_game *game)
         ft_putstr_fd("Error\nFailed to create image.\n", 2);
         return (1);
     }
-    return (0);
+    return 0;
 }   
-
 
 int init_game(t_game *game)
 {
-    int     x;
-    int     y;
-
-    x = init_mlx(game);
-    if (x)
-    {
+	game->player.x = 3.5;
+	game->player.y = 3.5;
+	game->player.dir_x = 1.0;
+	game->player.dir_y = 0.0;
+	game->player.plane_x = 0.0;
+	game->player.plane_y = 0.66;
+    if (init_mlx(game))
         return (1);
-    }
-    y = 0;
-    while (y < HEIGHT)
-    {
-        x = 0;
-        while (x < WIDTH)
-        {
-            mlx_put_pixel(game->img, x, y, 0x000000FF);
-            x++;
-        }
-        y++;
-    }
     if (mlx_image_to_window(game->mlx, game->img, 0, 0) == -1)
     {
         mlx_delete_image(game->mlx, game->img);
@@ -56,3 +44,5 @@ int init_game(t_game *game)
     }
     return (0);
 }
+
+

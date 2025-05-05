@@ -9,7 +9,10 @@ LIBS    := $(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm
 		
 SRCS	:= srcs/main.c \
 			srcs/game/run_game.c \
-			srcs/game/init.c
+			srcs/game/init.c \
+			srcs/game/utils.c \
+			srcs/game/player.c \
+			srcs/game/render.c \
 
 OBJS	:= ${SRCS:.c=.o}
 
