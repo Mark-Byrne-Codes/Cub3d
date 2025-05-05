@@ -1,9 +1,7 @@
 #ifndef CUB3D_H
 # define CUB3D_H
 
-# include <unistd.h>
 # include <fcntl.h>
-# include <stdlib.h>
 # include <math.h>
 # include <stdio.h>
 # include "./MLX42/MLX42.h"
@@ -93,4 +91,5 @@ void	control_player(mlx_key_data_t keydata, void *param);
 void    clean_exit(t_game *game);
 void	handle_esc(mlx_key_data_t keydata, t_game *game);
 
+int run_game(argv);
 #endif
