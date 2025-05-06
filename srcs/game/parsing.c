@@ -67,7 +67,7 @@ int	get_height(t_game *game)
 	return (i);
 }
 
-void	init_map(t_game *game)
+void	init_map_struct(t_game *game)
 {
 	game->map.fd = -1;
 	game->map.width = 0;
@@ -77,11 +77,30 @@ void	init_map(t_game *game)
 	game->map.file_path = NULL;
 }
 
+int	allocate_map_grid(t_game *game)
+{
+	int		i;
+	char	*gnl;
+
+	i = -1;
+	gnl = get_next_line(game->map.fd);
+	while (gnl != NULL && ++i < game->map.height)
+	{
+		game->map.width = ft_strlen(gnl);
+		game->map.map_grid[i] = ft_calloc(game->map.width + 1, sizeof(char));
+		if (!game->map.map_grid[i])
+			return (free(gnl), EXIT_FAILURE);
+		free(gnl);
+		gnl = get_next_line(game->map.fd);
+	}
+	if (gnl)
+		free(gnl);
+	return (EXIT_SUCCESS);
+}
+
 int	read_map(t_game *game, char *argv)
 {
-	char	*gnl;
-	int		i;
-
+	init_map_struct(game);
 	game->map.file_path = argv;
 	game->map.height = get_height(game);
 	if (game->map.height == -1)
@@ -92,19 +111,8 @@ int	read_map(t_game *game, char *argv)
 	game->map.fd = open(game->map.file_path, O_RDONLY);
 	if (game->map.fd == -1)
 		return (return_error(game, "Error: Failed to open map file"));
-	i = -1;
-	gnl = get_next_line(game->map.fd);
-	while (gnl != NULL && ++i < game->map.height)
-	{
-		game->map.width = ft_strlen(gnl);
-		game->map.map_grid[i] = ft_calloc(game->map.width + 1, sizeof(char));
-		if (!game->map.map_grid[i])
-			return (free(gnl), return_error(game, "Error: Failed to allocate map row"));
-		free(gnl);
-		gnl = get_next_line(game->map.fd);
-	}
-	if (gnl)
-		free(gnl);
+	if (allocate_map_grid(game))
+		return (return_error(game, "Error: Failed to allocate map row"));
 	return (EXIT_SUCCESS);
 }
 // printf("height[%d]: && width: %d\n", i, game->map.width);
