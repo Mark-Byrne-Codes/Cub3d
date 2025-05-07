@@ -151,19 +151,7 @@ int	read_map(t_game *game, char *argv)
 	close(game->map.fd);
 	return (EXIT_SUCCESS);
 }
-int	ft_strcmp(const char *s1, const char *s2)
-{
-	unsigned int	z;
 
-	z = 0;
-	while ((s1[z] != '\0' || s2[z] != '\0'))
-	{
-		if (s1[z] != s2[z])
-			return ((unsigned char)s1[z] - (unsigned char)s2[z]);
-		z++;
-	}
-	return (0);
-}
 void	free_array(char **split)
 {
 	int	i;
