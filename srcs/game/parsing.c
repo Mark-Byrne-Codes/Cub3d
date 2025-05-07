@@ -147,7 +147,7 @@ int	read_map(t_game *game, char *argv)
 	// 	printf("%s", game->map.map_grid[i]);
 	// 	i++;
 	// }
-	printf("\n");
+	// printf("\n");
 	close(game->map.fd);
 	return (EXIT_SUCCESS);
 }
