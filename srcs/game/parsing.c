@@ -336,7 +336,13 @@ int	check_map_element(char *element, char **arr)
 	if (ft_strcmp(element, "NO") != 0 && ft_strcmp(element, "SO") != 0
 		&& ft_strcmp(element, "WE") != 0 && ft_strcmp(element, "EA") != 0
 		&& ft_strcmp(element, "F") != 0 && ft_strcmp(element, "C") != 0)
+	{
+		if (element[0] == '1' || element[0] == '0' || element[0] == ' ' ||
+			element[0] == 'N' || element[0] == 'S' || 
+			element[0] == 'W' || element[0] == 'E')
+			return (MAP_LINE); // Special code for map lines
 		return (ERR_CONFIG);
+	}
 	if (!arr[1])
 		return (NO_EXT);
 	if (arr[2])
@@ -386,36 +392,25 @@ int process_configuration(t_game *game)
 			i++;
 			continue;
 		}
+		if (check_map_element(line[0], line) == MAP_LINE)
+			return (free_grid(line), EXIT_FAILURE);
 		if (load_config_element(game, line[0], line[1], line))
 		    return (free_grid(line), EXIT_FAILURE);
 		free_grid(line);
 	}
 	return (EXIT_SUCCESS);
 }
+
+void validate_map_data(t_game *game)
+{
+	(void)game;
+}
 int	validate_map_configuration(t_game *game)
 {
-	// int		i;
-	// char	**line;
-
-	// i = 0;
-	// while (game->map.map_grid[i] != NULL)
-	// {
-	// 	line = trim_and_split(game->map.map_grid[i]);
-	// 	if (!line)
-	// 	{
-	// 		if (errno == ENOMEM)
-	// 			return (EXIT_FAILURE);	// Real error
-	// 		i++;					// Skip empty lines
-	// 		continue ;
-	// 	}
-	// 	if (load_config_element(game, line[0], line[1], line))
-	// 		return (free_grid(line), EXIT_FAILURE);
-	// 	free_grid(line);
-	// 	i++;
-	// }
-	if (process_configuration(game))
+	if (process_configuration(game) == MAP_LINE)
 		validate_map_data(game);
-		//return (EXIT_FAILURE);
+	else
+		return (EXIT_FAILURE);
 	if (check_required_config(game))
 		return(EXIT_FAILURE);
 	return (EXIT_SUCCESS);

@@ -100,8 +100,8 @@ typedef enum e_error
 	NO_EXT,
 	ERR_DUP,
 	ERR_CONFIG,
-	FALSE,
 	ERR_RGB,
+	MAP_LINE,
 }				t_error;
 
 typedef struct s_game
