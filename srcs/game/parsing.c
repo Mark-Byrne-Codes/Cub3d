@@ -186,7 +186,8 @@ int	handle_error(char *line, int err, char *element)
 			ft_putstr_fd(" Invalid color format: Expected R,G,B ([0-255]"
 			" with no spaces): ", STDERR_FILENO);
 		else
-			ft_putstr_fd(" Duplicate definition of map element: ", STDERR_FILENO);
+			ft_putstr_fd(" Duplicate definition of map element: ",
+			STDERR_FILENO);
 		ft_putchar_fd(element[0], STDERR_FILENO);
 		ft_putchar_fd(' ', STDERR_FILENO);
 	}
@@ -337,9 +338,9 @@ int	check_map_element(char *element, char **arr)
 		&& ft_strcmp(element, "WE") != 0 && ft_strcmp(element, "EA") != 0
 		&& ft_strcmp(element, "F") != 0 && ft_strcmp(element, "C") != 0)
 	{
-		if (element[0] == '1' || element[0] == '0' || element[0] == ' ' ||
-			element[0] == 'N' || element[0] == 'S' || 
-			element[0] == 'W' || element[0] == 'E')
+		if (element[0] == '1' || element[0] == '0' || element[0] == ' '
+			|| element[0] == 'N' || element[0] == 'S'
+			|| element[0] == 'W' || element[0] == 'E')
 			return (MAP_LINE); // Special code for map lines
 		return (ERR_CONFIG);
 	}
@@ -355,7 +356,8 @@ void configuration_format(int err)
 		ft_putstr_fd(" Invalid map configuration", STDERR_FILENO);
 	else
 		ft_putstr_fd("Missing required map configuration", STDERR_FILENO);
-	ft_putstr_fd("\n\033[1;33mRequired configuration format:\033[0m\n", STDERR_FILENO);
+	ft_putstr_fd("\n\033[1;33mRequired configuration format:\033[0m\n",
+	STDERR_FILENO);
 	ft_putstr_fd("NO path/to/north_texture.png\n", STDERR_FILENO);
 	ft_putstr_fd("SO path/to/south_texture.png\n", STDERR_FILENO);
 	ft_putstr_fd("WE path/to/west_texture.png\n", STDERR_FILENO);
