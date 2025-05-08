@@ -9,11 +9,11 @@ void init_map(t_map *map)
 	map->file_path = NULL;
 }
 
-int run_game(argv)
-{
-	t_map	map;
+// int run_game(argv)
+// {
+// 	t_map	map;
 
-	init_map(&map);
+// 	init_map(&map);
 
-	return (0);
-}
+// 	return (0);
+// }

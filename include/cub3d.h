@@ -4,37 +4,54 @@
 # include <fcntl.h>
 # include <math.h>
 # include <stdio.h>
+# include <string.h>
 # include "./MLX42/MLX42.h"
 # include "../libft/libft.h"
 
 # define WIDTH 1920
 # define HEIGHT 1080
-# define MAP_WIDTH 8
-# define MAP_HEIGHT 8
 # define PI 3.14159265358979323846
+# define MOVE_SPEED 0.1
+# define ROTATE_SPEED 0.1
+
 
 
 typedef struct s_ray
 {
-	double		x;
-	double		y;
-	int			map_x;
-	int			map_y;
-	double		side_dist_x;
-	double		side_dist_y;
-	double		delta_dist_x;
-	double		delta_dist_y;
-	double		perp_wall_dist;
-	int			step_x;
-	int			step_y;
-	int			side;
-	int			hit;
-}				t_ray;
+    double  dir_x;
+    double  dir_y;
+    int     map_x;
+    int     map_y;
+    double  side_dist_x;
+    double  side_dist_y;
+    double  delta_dist_x;
+    double  delta_dist_y;
+    double  perp_wall_dist;
+    int     step_x;
+    int     step_y;
+    int     hit;
+    int     side;
+    int     line_height;
+    int     draw_start;
+    int     draw_end;
+    int     tex_x;
+    double  tex_pos;
+    double  step;
+    uint32_t color;
+}   t_ray;
+
+typedef enum e_wall_dir
+{
+	NORTH,
+	SOUTH,
+	EAST,
+	WEST
+}	t_wall_dir;
 
 typedef struct s_player
 {
-	double		x;
-	double		y;
+	double		pos_x;
+	double		pos_y;
 	double		dir_x;
 	double		dir_y;
 	double		plane_x;
@@ -50,10 +67,10 @@ typedef struct s_color
 
 typedef struct s_graphics
 {
-    mlx_image_t north;
-    mlx_image_t south;
-    mlx_image_t west;
-    mlx_image_t east;
+    mlx_image_t *north;
+    mlx_image_t *south;
+    mlx_image_t *west;
+    mlx_image_t *east;
 	t_color		floor_color;
 	t_color		ceiling_color;
 }  t_graphics;
@@ -89,8 +106,12 @@ int    init_game(t_game *game);
 int   run_game(t_game *game);
 void    render_graphics(void *param);
 void	control_player(mlx_key_data_t keydata, void *param);
-void    clean_exit(t_game *game);
+void    clean_exit(t_game *game, char *msg);
 void	handle_esc(mlx_key_data_t keydata, t_game *game);
-
-int run_game(argv);
+void 	raycast(t_game *game);
+void	render_minimap(t_game *game);
+int	load_textures(t_game *game);
+mlx_image_t  *select_texture(t_game *game, t_ray *ray);
+int  calculate_tex_x(t_ray *ray, mlx_image_t *tex, t_player *player);
+void draw_vertical_line(t_game *game, int x, t_ray *ray, mlx_image_t *tex);
 #endif

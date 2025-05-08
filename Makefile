@@ -11,8 +11,10 @@ SRCS	:= srcs/main.c \
 			srcs/game/run_game.c \
 			srcs/game/init.c \
 			srcs/game/utils.c \
-			srcs/game/player.c \
+			srcs/game/raycast_utils.c \
 			srcs/game/render.c \
+			srcs/game/raycast.c \
+			srcs/game/minimap.c \
 
 OBJS	:= ${SRCS:.c=.o}
 
