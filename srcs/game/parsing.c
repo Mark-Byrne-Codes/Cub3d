@@ -1,5 +1,6 @@
 #include "../../include/cub3d.h"
 
+int		check_map_element(char *element, char **arr);
 void	free_gnl(int fd)
 {
 	char	*line;
@@ -152,7 +153,7 @@ int	read_map(t_game *game, char *argv)
 	return (EXIT_SUCCESS);
 }
 
-void	free_array(char **split)
+void	free_grid(char **split)
 {
 	int	i;
 
@@ -165,18 +166,52 @@ void	free_array(char **split)
 	free(split);
 	split = NULL;
 }
+void configuration_format(int err);
+
+int	handle_error(char *line, int err, char *element)
+{
+	ft_putstr_fd("Error\nInvalid map:", STDERR_FILENO);
+	if (err == ERR_EXT)
+		ft_putstr_fd(" Invalid texture file: Expected: <.png> file: ",
+			STDERR_FILENO);
+	if (err == ERR_FILE)
+		ft_putstr_fd(" Cannot open texture file: ", STDERR_FILENO);
+	if (err == NO_EXT)
+		ft_putstr_fd(" Missing texture file path\n", STDERR_FILENO);
+	if (err == ERR_CONFIG)
+		return (configuration_format(1), EXIT_FAILURE);
+	if (err == ERR_RGB || err == ERR_DUP)
+	{
+		if (err == ERR_RGB)
+			ft_putstr_fd(" Invalid color format: Expected R,G,B ([0-255]"
+			" with no spaces): ", STDERR_FILENO);
+		else
+			ft_putstr_fd(" Duplicate definition of map element: ", STDERR_FILENO);
+		ft_putchar_fd(element[0], STDERR_FILENO);
+		ft_putchar_fd(' ', STDERR_FILENO);
+	}
+	if (line)
+		ft_putendl_fd(line, STDERR_FILENO);
+	return (EXIT_FAILURE);
+}
 
 int	check_texture(t_game *game, char *texture, char *direction)
 {
 	const char	*extension;
 
-	if (!texture || !direction)
-		return (EXIT_FAILURE);
+	// int 		fd;
+	if (!texture)
+		return (ERR_EXT);
 	extension = ft_strrchr(texture, '.');
 	if (!extension)
-		return (EXIT_FAILURE);
+		return (ERR_EXT);
 	if ((extension && ft_strcmp(extension, ".png") != 0))
-		return (EXIT_FAILURE);
+		return (ERR_EXT);
+	// fd = open(texture, O_RDONLY);
+	// if (fd == -1)
+	// 	return (ERR_FILE);
+	// close(fd);
+	// printf("extsd: %s\n", extension);
 	if (ft_strcmp(direction, "NO") == 0)
 		game->map.north_texture = ft_strdup(texture);
 	if (ft_strcmp(direction, "SO") == 0)
@@ -191,7 +226,14 @@ int	check_texture(t_game *game, char *texture, char *direction)
 int	check_rgb(char *str)
 {
 	int	color;
+	int	i;
 
+	i = -1;
+	while (str[++i] != '\0')
+	{
+		if (!ft_isdigit(str[i]))
+			return (-1);
+	}
 	color = ft_atoi(str);
 	if (color < 0 || color > 255)
 		return (-1);
@@ -207,12 +249,12 @@ int	check_color(t_game *game, char *color, char c)
 		return (EXIT_FAILURE);
 	rgb_format = ft_split(color, ',');
 	if (!rgb_format || !rgb_format[0] || !rgb_format[1] || !rgb_format[2])
-		return (EXIT_FAILURE);
+		return (free_grid(rgb_format), ERR_RGB);
 	rgb.r = check_rgb(rgb_format[0]);
 	rgb.g = check_rgb(rgb_format[1]);
 	rgb.b = check_rgb(rgb_format[2]);
 	if (rgb.r == -1 || rgb.g == -1 || rgb.b == -1)
-		return (free_array(rgb_format), EXIT_FAILURE);
+		return (free_grid(rgb_format), ERR_RGB);
 	if (c == 'F')
 	{
 		game->graphics.floor_color = rgb;
@@ -223,22 +265,49 @@ int	check_color(t_game *game, char *color, char c)
 		game->graphics.ceiling_color = rgb;
 		game->map.ceiling_set = 1;
 	}
-	free_array(rgb_format);
+	free_grid(rgb_format);
 	return (EXIT_SUCCESS);
 }
 
-int	load_elements(t_game *game, char *element, char *line)
+int	check_duplication(t_game *game, const char *identifier)
 {
+	if (ft_strcmp(identifier, "NO") == 0 && game->map.north_texture)
+		return (ERR_DUP);
+	if (ft_strcmp(identifier, "SO") == 0 && game->map.south_texture)
+		return (ERR_DUP);
+	if (ft_strcmp(identifier, "WE") == 0 && game->map.west_texture)
+		return (ERR_DUP);
+	if (ft_strcmp(identifier, "EA") == 0 && game->map.east_texture)
+		return (ERR_DUP);
+	if (ft_strcmp(identifier, "F") == 0 && game->map.floor_set)
+		return (ERR_DUP);
+	if (ft_strcmp(identifier, "C") == 0 && game->map.ceiling_set)
+		return (ERR_DUP);
+	return (EXIT_SUCCESS);
+}
+
+int	load_config_element(t_game *game, char *element, char *line, char **arr)
+{
+	t_error	err;
+
+	err = check_map_element(element, arr);
+	if (err)
+		return (handle_error(line, err, NULL));
+	err = check_duplication(game, element);
+	if (err)
+		return (handle_error(line, err, element));
 	if (ft_strcmp(element, "NO") == 0 || ft_strcmp(element, "SO") == 0
 		|| ft_strcmp(element, "WE") == 0 || ft_strcmp(element, "EA") == 0)
 	{
-		if (check_texture(game, line, element))
-			return (EXIT_FAILURE);
+		err = check_texture(game, line, element);
+		if (err)
+			return (handle_error(line, err, NULL));
 	}
-	else if (ft_strcmp(element, "F") == 0 || ft_strcmp(element, "C") == 0)
+	if (ft_strcmp(element, "F") == 0 || ft_strcmp(element, "C") == 0)
 	{
-		if (check_color(game, line, element[0]))
-			return (EXIT_FAILURE);
+		err = check_color(game, line, element[0]);
+		if (err)
+			return (handle_error(line, err, element));
 	}
 	return (EXIT_SUCCESS);
 }
@@ -252,53 +321,102 @@ char	**trim_and_split(char *map_line)
 	if (!trim)
 		return (NULL);
 	if (!trim[0])
-		return (free(trim), EMPTY_LINE);
+		return (free(trim), NULL);
 	line = ft_split(trim, ' ');
 	free(trim);
 	if (!line)
 		return (NULL);
+	if ((line && !line[0]))
+		return (free_grid(line), NULL);
 	return (line);
 }
-int	check_duplication(t_game *game, const char *identifier)
+
+int	check_map_element(char *element, char **arr)
 {
-	if (ft_strcmp(identifier, "NO") == 0 && game->map.north_texture)
-		return (EXIT_FAILURE);
-	if (ft_strcmp(identifier, "SO") == 0 && game->map.south_texture)
-		return (EXIT_FAILURE);
-	if (ft_strcmp(identifier, "WE") == 0 && game->map.west_texture)
-		return (EXIT_FAILURE);
-	if (ft_strcmp(identifier, "EA") == 0 && game->map.east_texture)
-		return (EXIT_FAILURE);
-	if (ft_strcmp(identifier, "F") == 0 && game->map.floor_set)
-		return (EXIT_FAILURE);
-	if (ft_strcmp(identifier, "C") == 0 && game->map.ceiling_set)
-		return (EXIT_FAILURE);
+	if (ft_strcmp(element, "NO") != 0 && ft_strcmp(element, "SO") != 0
+		&& ft_strcmp(element, "WE") != 0 && ft_strcmp(element, "EA") != 0
+		&& ft_strcmp(element, "F") != 0 && ft_strcmp(element, "C") != 0)
+		return (ERR_CONFIG);
+	if (!arr[1])
+		return (NO_EXT);
+	if (arr[2])
+		return (ERR_CONFIG);
 	return (EXIT_SUCCESS);
 }
-int	validate_map(t_game *game)
+void configuration_format(int err)
 {
-	int		i;
-	char	**line;
+	if (err)
+		ft_putstr_fd(" Invalid map configuration", STDERR_FILENO);
+	else
+		ft_putstr_fd("Missing required map configuration", STDERR_FILENO);
+	ft_putstr_fd("\n\033[1;33mRequired configuration format:\033[0m\n", STDERR_FILENO);
+	ft_putstr_fd("NO path/to/north_texture.png\n", STDERR_FILENO);
+	ft_putstr_fd("SO path/to/south_texture.png\n", STDERR_FILENO);
+	ft_putstr_fd("WE path/to/west_texture.png\n", STDERR_FILENO);
+	ft_putstr_fd("EA path/to/east_texture.png\n", STDERR_FILENO);
+	ft_putstr_fd("F  0,0,0  (RGB values 0-255)\n", STDERR_FILENO);
+	ft_putstr_fd("C  0,0,0  (RGB values 0-255)\n", STDERR_FILENO);
+}
 
-	i = 0;
-	while (game->map.map_grid[i] != NULL)
+int check_required_config(t_game *game)
+{
+	if (!game->map.north_texture || !game->map.south_texture
+		|| !game->map.west_texture || !game->map.east_texture
+		|| !game->map.ceiling_set || !game->map.floor_set)
+	{
+		ft_putstr_fd("Error\nInvalid map: ", STDERR_FILENO);
+		configuration_format(0);
+		return (EXIT_FAILURE);
+	}
+	return (EXIT_SUCCESS);
+}
+int process_configuration(t_game *game)
+{
+	int i;
+	char **line;
+
+	i = -1;
+	while (game->map.map_grid[++i] != NULL)
 	{
 		line = trim_and_split(game->map.map_grid[i]);
 		if (!line)
-			return (EXIT_FAILURE);
-		if (line == EMPTY_LINE)
-			break ;
-		if (!((ft_strcmp(line[0], "NO") == 0 || ft_strcmp(line[0], "SO") == 0
-			|| ft_strcmp(line[0], "WE") == 0 || ft_strcmp(line[0],"EA") == 0 
-			|| ft_strcmp(line[0], "F") == 0|| ft_strcmp(line[0], "C") == 0)
-			&& line[1] && !line[2]))
-			return (free_array(line), EXIT_FAILURE);
-		if (check_duplication(game, line[0]))
-			return (free_array(line), EXIT_FAILURE);
-		if (load_elements(game, line[0], line[1]))
-			return (free_array(line), EXIT_FAILURE);
-		free_array(line);
-		i++;
+		{
+			if (errno == ENOMEM)
+				return (EXIT_FAILURE);
+			i++;
+			continue;
+		}
+		if (load_config_element(game, line[0], line[1], line))
+		    return (free_grid(line), EXIT_FAILURE);
+		free_grid(line);
 	}
+	return (EXIT_SUCCESS);
+}
+int	validate_map_configuration(t_game *game)
+{
+	// int		i;
+	// char	**line;
+
+	// i = 0;
+	// while (game->map.map_grid[i] != NULL)
+	// {
+	// 	line = trim_and_split(game->map.map_grid[i]);
+	// 	if (!line)
+	// 	{
+	// 		if (errno == ENOMEM)
+	// 			return (EXIT_FAILURE);	// Real error
+	// 		i++;					// Skip empty lines
+	// 		continue ;
+	// 	}
+	// 	if (load_config_element(game, line[0], line[1], line))
+	// 		return (free_grid(line), EXIT_FAILURE);
+	// 	free_grid(line);
+	// 	i++;
+	// }
+	if (process_configuration(game))
+		validate_map_data(game);
+		//return (EXIT_FAILURE);
+	if (check_required_config(game))
+		return(EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }

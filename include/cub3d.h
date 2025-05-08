@@ -93,15 +93,16 @@ typedef struct s_parser
 
 }				t_parser;
 
-typedef enum e_attribute
+typedef enum e_error
 {
-	NORTH,
-	SOUTH,
-	EAST,
-	WEST,
-	FLOOR,
-	CEILING
-}				t_attribute;
+	ERR_FILE = 2,
+	ERR_EXT,
+	NO_EXT,
+	ERR_DUP,
+	ERR_CONFIG,
+	FALSE,
+	ERR_RGB,
+}				t_error;
 
 typedef struct s_game
 {
@@ -119,7 +120,7 @@ typedef struct s_game
 void			run_game(t_game *game);
 int				read_map(t_game *game, char *argv);
 void			free_map(t_game *game);
-int				validate_map(t_game *game);
+int				validate_map_configuration(t_game *game);
 // void	free_gnl(int fd);
 
 // void    render_graphics(t_game *game);
@@ -193,3 +194,5 @@ int				validate_map(t_game *game);
 // 	game->graphics.floor_color.g, game->graphics.floor_color.b);
 // printf("here\n");
 // printf("here\n");
+
+
