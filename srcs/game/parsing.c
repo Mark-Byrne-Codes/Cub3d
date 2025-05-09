@@ -27,30 +27,37 @@ int	return_error(t_game *game, char *msg)
 	return (EXIT_FAILURE);
 }
 
-void	free_map(t_game *game)
+void free_map(t_game *game)
 {
-	int	i;
+    int	i;
 
-	if (!game || !game->map.map_grid || !game->map.height)
-		return ;
-	i = 0;
-	while (i < game->map.height)
+    if (!game)
+		return;
+	if (game->map.map_grid) 
 	{
-		if (game->map.map_grid[i])
+		i = -1;
+		while (game->map.map_grid[++i])
 			free(game->map.map_grid[i]);
-		i++;
+		free(game->map.map_grid);
+		game->map.map_grid = NULL;
 	}
-	free(game->map.map_grid);
-	game->map.map_grid = NULL;
+	if (game->map.map_data)
+	{
+		i = -1;
+		while (game->map.map_data[++i]) 
+			free(game->map.map_data[i]);
+		free(game->map.map_data);
+		game->map.map_data = NULL;
+	}
 	free(game->map.north_texture);
-	game->map.north_texture = NULL;
 	free(game->map.south_texture);
-	game->map.south_texture = NULL;
 	free(game->map.west_texture);
-	game->map.west_texture = NULL;
 	free(game->map.east_texture);
+	game->map.north_texture = NULL;
+	game->map.south_texture = NULL;
+	game->map.west_texture = NULL;
 	game->map.east_texture = NULL;
-}
+	}
 
 int	get_height(t_game *game)
 {
@@ -79,12 +86,13 @@ int	get_height(t_game *game)
 void	init_map_struct(t_game *game)
 {
 	game->map.fd = -1;
-	game->map.width = 0;
+	// game->map.width = 0;
 	game->map.height = 0;
 	game->map.floor_set = 0;
 	game->map.ceiling_set = 0;
 	game->map.start_dir = '\0';
 	game->map.map_grid = NULL;
+	game->map.map_data = NULL;
 	game->map.file_path = NULL;
 	game->map.north_texture = NULL;
 	game->map.south_texture = NULL;
@@ -93,20 +101,22 @@ void	init_map_struct(t_game *game)
 }
 int	load_map(t_game *game, char *gnl, int i)
 {
-	game->map.width = ft_strlen(gnl);
-	game->map.map_grid[i] = ft_calloc(game->map.width + 1, sizeof(char));
+	// int width;
+
+	// width = ft_strlen(gnl);
+	// game->map.map_grid[i] = ft_calloc(width + 1, sizeof(char));
+	// if (!game->map.map_grid[i])
+	// 	return (free(gnl), EXIT_FAILURE);
+	// if (game->map.map_grid[i])
+	// {
+	// free(game->map.map_grid[i]);
+	game->map.map_grid[i] = ft_strdup(gnl);
 	if (!game->map.map_grid[i])
 		return (free(gnl), EXIT_FAILURE);
-	if (game->map.map_grid[i])
-	{
-		free(game->map.map_grid[i]);
-		game->map.map_grid[i] = ft_strdup(gnl);
-		if (!game->map.map_grid[i])
-			return (free(gnl), EXIT_FAILURE);
-	}
+	// }
 	return (EXIT_SUCCESS);
 }
-int	allocate_map_grid(t_game *game)
+int	allocate_map_grid(t_game *game, int height)
 {
 	int		i;
 	char	*gnl;
@@ -115,7 +125,7 @@ int	allocate_map_grid(t_game *game)
 	gnl = get_next_line(game->map.fd);
 	if (!gnl)
 		return (EXIT_FAILURE);
-	while (gnl && ++i < game->map.height)
+	while (gnl && ++i < height)
 	{
 		if (load_map(game, gnl, i))
 			return (EXIT_FAILURE);
@@ -129,26 +139,29 @@ int	allocate_map_grid(t_game *game)
 
 int	read_map(t_game *game, char *argv)
 {
+	int height;
+
 	init_map_struct(game);
 	game->map.file_path = argv;
-	game->map.height = get_height(game);
-	if (game->map.height == -1)
+	height = get_height(game);
+	if (height == -1)
 		return (return_error(game, "Error:  Invalid map"));
-	game->map.map_grid = ft_calloc(game->map.height + 1, sizeof(char *));
+	game->map.map_grid = ft_calloc(height + 1, sizeof(char *));
 	if (!game->map.map_grid)
 		return (return_error(game, "Error: Failed to allocate map grid"));
 	game->map.fd = open(game->map.file_path, O_RDONLY);
 	if (game->map.fd == -1)
 		return (return_error(game, "Error: Failed to open map file"));
-	if (allocate_map_grid(game))
+	if (allocate_map_grid(game, height))
 		return (return_error(game, "Error: Failed to allocate map row"));
-	// int i = 0;
-	// while (i < game->map.height)
-	// {
-	// 	printf("%s", game->map.map_grid[i]);
-	// 	i++;
-	// }
-	// printf("\n");
+	int i = 0;
+	printf("########## Map file ###############\n");
+	while (i < height)
+	{
+		printf("%s", game->map.map_grid[i]);
+		i++;
+	}
+	printf("\n\n");
 	close(game->map.fd);
 	return (EXIT_SUCCESS);
 }
@@ -378,6 +391,59 @@ int check_required_config(t_game *game)
 	}
 	return (EXIT_SUCCESS);
 }
+
+int 	get_map_height(t_game *game, int i)
+{
+	int height;
+
+	height = 0;
+	while (game->map.map_grid[i] != NULL)
+	{
+		i++;
+		height++;
+	}
+	return (height);
+}
+
+
+int validate_map_data(t_game *game, int i)
+{
+	// int width = 0;
+	// int height;
+	int j = 0;
+
+	game->map.height = get_map_height(game, i);
+	game->map.map_data = ft_calloc(game->map.height + 1, sizeof(char *));
+	if (!game->map.map_data)
+		return (return_error(game, "Error: Failed to allocate map data"));
+	while (game->map.map_grid[i] != NULL)
+	{
+		// game->map.width = ft_strlen(game->map.map_grid[i]);
+		// game->map.map_data[j] = ft_calloc(game->map.width  + 1, sizeof(char));
+		// if (!game->map.map_data)
+		// 	return (return_error(game, "Error: Failed to allocate map row"));
+		// if (game->map.map_data[j])
+		// {
+		// 	free(game->map.map_data[j]);
+		game->map.map_data[j] = ft_strdup(game->map.map_grid[i]);
+		if (!game->map.map_data[j])
+			return (return_error(game, "Error: Failed to allocate map row"));
+		j++;
+		i++;
+		// }
+		// printf("%s", game->map.map_grid[i]);
+	}
+	i = 0;
+	printf("\n########## Map data ###############\n\n");
+	while (i < game->map.height)
+	{
+		printf("%s", game->map.map_data[i]);
+		i++;
+	}
+	printf("\n\n");
+	return (EXIT_SUCCESS);
+	
+}
 int process_configuration(t_game *game)
 {
 	int i;
@@ -395,23 +461,22 @@ int process_configuration(t_game *game)
 			continue;
 		}
 		if (check_map_element(line[0], line) == MAP_LINE)
-			return (free_grid(line), EXIT_FAILURE);
+		{
+			free_grid(line);
+			break; 
+		}
 		if (load_config_element(game, line[0], line[1], line))
 		    return (free_grid(line), EXIT_FAILURE);
 		free_grid(line);
 	}
+	validate_map_data(game, i - 1);
 	return (EXIT_SUCCESS);
 }
 
-void validate_map_data(t_game *game)
-{
-	(void)game;
-}
+
 int	validate_map_configuration(t_game *game)
 {
 	if (process_configuration(game) == MAP_LINE)
-		validate_map_data(game);
-	else
 		return (EXIT_FAILURE);
 	if (check_required_config(game))
 		return(EXIT_FAILURE);

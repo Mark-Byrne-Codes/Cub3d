@@ -15,23 +15,18 @@ int	main(int argc, char **argv)
 		ft_putstr_fd("Error\nFailed to allocate memory for game.\n", 2);
 		return (1);
 	}
-	if (read_map(game, argv[1]) == EXIT_FAILURE)
-		free_map(game);
-	if (validate_map_configuration(game))
-	{
-		free_map(game);
-		// printf("Error: Invalid map\n");
-		// exit(1);
-	}
-	// printf("NO: %s\nSO: %s\nWE: %s\nEA: %s\n", 
-	// 	game->map.north_texture, game->map.south_texture,
-	// 	game->map.west_texture, game->map.east_texture);
-	// printf("C: %d, %d, %d\n", game->graphics.ceiling_color.r, 
-	// 	game->graphics.ceiling_color.g, game->graphics.ceiling_color.b);
-	// printf("F: %d, %d, %d\n", game->graphics.floor_color.r, 
-	// 	game->graphics.floor_color.g, game->graphics.floor_color.b);
-	// if (game->map.ceiling_set == 0)
-	// 	printf("not set\n");
+	read_map(game, argv[1]);
+	validate_map_configuration(game);
+	printf("\n########## Main ###############\n\n");
+	printf("NO: %s\nSO: %s\nWE: %s\nEA: %s\n", 
+		game->map.north_texture, game->map.south_texture,
+		game->map.west_texture, game->map.east_texture);
+	printf("C: %d, %d, %d\n", game->graphics.ceiling_color.r, 
+		game->graphics.ceiling_color.g, game->graphics.ceiling_color.b);
+	printf("F: %d, %d, %d\n", game->graphics.floor_color.r, 
+		game->graphics.floor_color.g, game->graphics.floor_color.b);
+	if (game->map.ceiling_set == 0)
+		printf("not set\n");
 	
 	// init_and_validate_map(argv[1]);
 	// init_mlx();

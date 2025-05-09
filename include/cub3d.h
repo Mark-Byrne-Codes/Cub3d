@@ -69,6 +69,7 @@ typedef struct s_map
 	int			height;
 	char		*file_path;
 	char		**map_grid;
+	char 		**map_data;
 	char		start_dir;
 	int 		floor_set;
 	int 		ceiling_set;
@@ -101,6 +102,7 @@ typedef enum e_error
 	ERR_DUP,
 	ERR_CONFIG,
 	ERR_RGB,
+	// NO_CONFIG,
 	MAP_LINE,
 }				t_error;
 
