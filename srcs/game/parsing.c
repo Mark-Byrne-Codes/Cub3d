@@ -155,7 +155,7 @@ int	read_map(t_game *game, char *argv)
 	if (allocate_map_grid(game, height))
 		return (return_error(game, "Error: Failed to allocate map row"));
 	int i = 0;
-	printf("########## Map file ###############\n");
+	printf("########## Map file config ###############\n");
 	while (i < height)
 	{
 		printf("%s", game->map.map_grid[i]);
