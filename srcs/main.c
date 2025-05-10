@@ -17,7 +17,7 @@ int	main(int argc, char **argv)
 	}
 	read_map(game, argv[1]);
 	validate_map_configuration(game);
-	printf("\n########## Main ###############\n\n");
+	printf("\n\033[1;33m########## main ###############\033[0m\n\n");
 	printf("NO: %s\nSO: %s\nWE: %s\nEA: %s\n", 
 		game->map.north_texture, game->map.south_texture,
 		game->map.west_texture, game->map.east_texture);
@@ -25,8 +25,8 @@ int	main(int argc, char **argv)
 		game->graphics.ceiling_color.g, game->graphics.ceiling_color.b);
 	printf("F: %d, %d, %d\n", game->graphics.floor_color.r, 
 		game->graphics.floor_color.g, game->graphics.floor_color.b);
-	if (game->map.ceiling_set == 0)
-		printf("not set\n");
+	printf("Player start direction: %c\n", game->map.start_dir);
+	printf("Player found at position: [%d][%d]\n", game->map.player_x, game->map.player_y);
 	
 	// init_and_validate_map(argv[1]);
 	// init_mlx();

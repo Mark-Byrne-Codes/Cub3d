@@ -88,6 +88,8 @@ void	init_map_struct(t_game *game)
 	game->map.fd = -1;
 	// game->map.width = 0;
 	game->map.height = 0;
+	game->map.player_x = 0;
+	game->map.player_y = 0;
 	game->map.floor_set = 0;
 	game->map.ceiling_set = 0;
 	game->map.start_dir = '\0';
@@ -99,23 +101,7 @@ void	init_map_struct(t_game *game)
 	game->map.west_texture = NULL;
 	game->map.east_texture = NULL;
 }
-int	load_map(t_game *game, char *gnl, int i)
-{
-	// int width;
 
-	// width = ft_strlen(gnl);
-	// game->map.map_grid[i] = ft_calloc(width + 1, sizeof(char));
-	// if (!game->map.map_grid[i])
-	// 	return (free(gnl), EXIT_FAILURE);
-	// if (game->map.map_grid[i])
-	// {
-	// free(game->map.map_grid[i]);
-	game->map.map_grid[i] = ft_strdup(gnl);
-	if (!game->map.map_grid[i])
-		return (free(gnl), EXIT_FAILURE);
-	// }
-	return (EXIT_SUCCESS);
-}
 int	allocate_map_grid(t_game *game, int height)
 {
 	int		i;
@@ -127,8 +113,9 @@ int	allocate_map_grid(t_game *game, int height)
 		return (EXIT_FAILURE);
 	while (gnl && ++i < height)
 	{
-		if (load_map(game, gnl, i))
-			return (EXIT_FAILURE);
+		game->map.map_grid[i] = ft_strdup(gnl);
+		if (!game->map.map_grid[i])
+			return (free(gnl), EXIT_FAILURE);
 		free(gnl);
 		gnl = get_next_line(game->map.fd);
 	}
@@ -155,13 +142,13 @@ int	read_map(t_game *game, char *argv)
 	if (allocate_map_grid(game, height))
 		return (return_error(game, "Error: Failed to allocate map row"));
 	int i = 0;
-	printf("########## Map file config ###############\n");
+	printf("\033[1;33m########## Map file config ###############\033[0m\n\n");
 	while (i < height)
 	{
 		printf("%s", game->map.map_grid[i]);
 		i++;
 	}
-	printf("\n\n");
+	printf("\n\n\033[1;33m##########ERROR###############\033[0m\n");
 	close(game->map.fd);
 	return (EXIT_SUCCESS);
 }
@@ -183,49 +170,71 @@ void configuration_format(int err);
 
 int	handle_error(char *line, int err, char *element)
 {
-	ft_putstr_fd("Error\nInvalid map:", STDERR_FILENO);
+	ft_putstr_fd("Error: ", STDERR_FILENO);
 	if (err == ERR_EXT)
-		ft_putstr_fd(" Invalid texture file: Expected: <.png> file: ",
+		ft_putstr_fd("Invalid texture file: Expected: <.png> file: ",
 			STDERR_FILENO);
 	if (err == ERR_FILE)
-		ft_putstr_fd(" Cannot open texture file: ", STDERR_FILENO);
-	if (err == NO_EXT)
-		ft_putstr_fd(" Missing texture file path\n", STDERR_FILENO);
+		ft_putstr_fd("Cannot open texture file: ", STDERR_FILENO);
 	if (err == ERR_CONFIG)
-		return (configuration_format(1), EXIT_FAILURE);
-	if (err == ERR_RGB || err == ERR_DUP)
+		return (ft_putstr_fd("Invalid map configuration\n", 2), 1);
+	if (err == ERR_READ)
+			ft_putstr_fd("Permission denied: Cannot read file: ", 2);
+	if (err == NO_FILE)
+			ft_putstr_fd("File does not exist: ", STDERR_FILENO);
+	if (err == ERR_RGB || err == ERR_DUP || err == ERR_IS_DIR || err == NO_EXT)
 	{
 		if (err == ERR_RGB)
-			ft_putstr_fd(" Invalid color format: Expected R,G,B ([0-255]"
-			" with no spaces): ", STDERR_FILENO);
+			ft_putstr_fd("Invalid color format: Expected R,G,B ([0-255]"
+			" without spaces): ", STDERR_FILENO);
+		else if (err == ERR_DUP)
+			ft_putstr_fd("Duplicate definition of map element: ", 2);
+		else if (err == ERR_IS_DIR)
+			ft_putstr_fd("Path is a directory: ", STDERR_FILENO);
 		else
-			ft_putstr_fd(" Duplicate definition of map element: ",
-			STDERR_FILENO);
-		ft_putchar_fd(element[0], STDERR_FILENO);
-		ft_putchar_fd(' ', STDERR_FILENO);
+			ft_putstr_fd("Missing texture path for ", STDERR_FILENO);
+		ft_putstr_fd(element, STDERR_FILENO);
+		if (err == NO_EXT)
+			ft_putstr_fd(" \n", STDERR_FILENO);
+		else
+			ft_putchar_fd(' ', STDERR_FILENO);
 	}
 	if (line)
 		ft_putendl_fd(line, STDERR_FILENO);
 	return (EXIT_FAILURE);
 }
 
-int	check_texture(t_game *game, char *texture, char *direction)
+int check_file_permissions(char *texture)
 {
 	const char	*extension;
+	int 		fd;
 
-	// int 		fd;
-	if (!texture)
-		return (ERR_EXT);
+	fd = open(texture, __O_DIRECTORY);
+	if (fd != -1)
+		return (close(fd), ERR_IS_DIR);
+	if (access(texture, F_OK) == -1)
+		return (NO_FILE);
+	if (access(texture, R_OK) == -1)
+		return (ERR_READ);
 	extension = ft_strrchr(texture, '.');
 	if (!extension)
 		return (ERR_EXT);
 	if ((extension && ft_strcmp(extension, ".png") != 0))
 		return (ERR_EXT);
-	// fd = open(texture, O_RDONLY);
-	// if (fd == -1)
-	// 	return (ERR_FILE);
-	// close(fd);
-	// printf("extsd: %s\n", extension);
+	fd = open(texture, O_RDONLY);
+	if (fd == -1)
+		return (ERR_FILE);
+	close(fd);
+	return (EXIT_SUCCESS);
+}
+
+int	check_texture(t_game *game, char *texture, char *direction)
+{
+	int err;
+
+	err = check_file_permissions(texture);
+	if (err)
+		return (err);
 	if (ft_strcmp(direction, "NO") == 0)
 		game->map.north_texture = ft_strdup(texture);
 	if (ft_strcmp(direction, "SO") == 0)
@@ -306,7 +315,7 @@ int	load_config_element(t_game *game, char *element, char *line, char **arr)
 
 	err = check_map_element(element, arr);
 	if (err)
-		return (handle_error(line, err, NULL));
+		return (handle_error(line, err, element));
 	err = check_duplication(game, element);
 	if (err)
 		return (handle_error(line, err, element));
@@ -315,7 +324,7 @@ int	load_config_element(t_game *game, char *element, char *line, char **arr)
 	{
 		err = check_texture(game, line, element);
 		if (err)
-			return (handle_error(line, err, NULL));
+			return (handle_error(line, err, element));
 	}
 	if (ft_strcmp(element, "F") == 0 || ft_strcmp(element, "C") == 0)
 	{
@@ -365,11 +374,8 @@ int	check_map_element(char *element, char **arr)
 }
 void configuration_format(int err)
 {
-	if (err)
-		ft_putstr_fd(" Invalid map configuration", STDERR_FILENO);
-	else
-		ft_putstr_fd("Missing required map configuration", STDERR_FILENO);
-	ft_putstr_fd("\n\033[1;33mRequired configuration format:\033[0m\n",
+	(void)err;
+	ft_putstr_fd("\033[1;33mRequired configuration format:\033[0m\n",
 	STDERR_FILENO);
 	ft_putstr_fd("NO path/to/north_texture.png\n", STDERR_FILENO);
 	ft_putstr_fd("SO path/to/south_texture.png\n", STDERR_FILENO);
@@ -385,7 +391,6 @@ int check_required_config(t_game *game)
 		|| !game->map.west_texture || !game->map.east_texture
 		|| !game->map.ceiling_set || !game->map.floor_set)
 	{
-		ft_putstr_fd("Error\nInvalid map: ", STDERR_FILENO);
 		configuration_format(0);
 		return (EXIT_FAILURE);
 	}
@@ -405,44 +410,98 @@ int 	get_map_height(t_game *game, int i)
 	return (height);
 }
 
-
-int validate_map_data(t_game *game, int i)
+int  find_player(t_game *game);
+int allocate_map_data(t_game *game, int i)
 {
-	// int width = 0;
-	// int height;
-	int j = 0;
+	int j;
 
 	game->map.height = get_map_height(game, i);
 	game->map.map_data = ft_calloc(game->map.height + 1, sizeof(char *));
 	if (!game->map.map_data)
 		return (return_error(game, "Error: Failed to allocate map data"));
+	j = 0;
 	while (game->map.map_grid[i] != NULL)
 	{
-		// game->map.width = ft_strlen(game->map.map_grid[i]);
-		// game->map.map_data[j] = ft_calloc(game->map.width  + 1, sizeof(char));
-		// if (!game->map.map_data)
-		// 	return (return_error(game, "Error: Failed to allocate map row"));
-		// if (game->map.map_data[j])
-		// {
-		// 	free(game->map.map_data[j]);
 		game->map.map_data[j] = ft_strdup(game->map.map_grid[i]);
 		if (!game->map.map_data[j])
 			return (return_error(game, "Error: Failed to allocate map row"));
 		j++;
 		i++;
-		// }
-		// printf("%s", game->map.map_grid[i]);
 	}
-	i = 0;
-	printf("\n########## Map data ###############\n\n");
-	while (i < game->map.height)
-	{
+	printf("\n\033[1;33m########## Map data ###############\033[0m\n\n");
+	i = -1;
+	while (++i < game->map.height)
 		printf("%s", game->map.map_data[i]);
-		i++;
-	}
 	printf("\n\n");
 	return (EXIT_SUCCESS);
 	
+}
+
+int 	handle_map_error(int err)
+{
+	ft_putstr_fd("Error: Invalid map: ", STDERR_FILENO);
+	if (err == MULTI_PLAYER)
+		ft_putstr_fd("Multiple players found: "
+		"Map must contain one of: N, S, E, W\n", STDERR_FILENO);
+	if (err == NO_PLAYER)
+		ft_putstr_fd("No player found: "
+		"Map must contain one of: N, S, E, W\n", STDERR_FILENO);
+	if (err == INVALID_CHAR)
+		ft_putstr_fd("Found invalid character\n"
+		"Allowed characters: 0, 1, N, S, W, E, space\n", STDERR_FILENO);
+	return (EXIT_FAILURE);
+}
+// printf("\033[1;31mInvalid character '%c' at [%d][%d]\033[0m\n", c, i, j);
+// printf("\033[1;32mPlayer validation successful!\033[0m\n");
+int find_player(t_game *game)
+{
+	int		i;
+	int		j;
+	char	c;
+	int		found;
+	char	*trimmed_line;
+
+	printf("\n\033[1;33m########## Player Validation ###############\033[0m\n");
+	i = -1;
+	found = 0;
+	while (game->map.map_data[++i])
+	{
+		trimmed_line = ft_strtrim(game->map.map_data[i], "\n");
+		if (!trimmed_line)
+			return (EXIT_FAILURE);
+		j = -1;
+		while (trimmed_line[++j])
+		{
+			c = trimmed_line[j];
+			if (!ft_strchr("01NSEW ", c))
+				return (free(trimmed_line), INVALID_CHAR);
+			if (ft_strchr("NSEW", c))
+			{
+				found++;
+				game->map.start_dir = c;
+				game->map.player_x = j;
+				game->map.player_y = i;
+				if (found > 1)
+					return (free(trimmed_line), MULTI_PLAYER);
+			}
+		}
+		free(trimmed_line);
+	}
+	if (found == 0)
+		return (NO_PLAYER);
+	return (EXIT_SUCCESS);
+}
+
+int 	validate_map_data(t_game *game, int i)
+{
+	int err;
+
+	if (allocate_map_data(game, i))
+		return (EXIT_FAILURE);
+	err = find_player(game);
+	if (err)
+		return (handle_map_error(err));
+	return (EXIT_SUCCESS);
 }
 int process_configuration(t_game *game)
 {
@@ -469,7 +528,8 @@ int process_configuration(t_game *game)
 		    return (free_grid(line), EXIT_FAILURE);
 		free_grid(line);
 	}
-	validate_map_data(game, i - 1);
+	if (validate_map_data(game, i - 1))
+		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
 
