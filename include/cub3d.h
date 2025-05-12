@@ -14,6 +14,13 @@
 # define HEIGHT 1080
 # define PI 3.14159265358979323846
 
+# define MOVE_SPEED 0.1
+# define ROTATE_SPEED 0.2
+# define X_SIDE 0
+# define Y_SIDE 1
+# define WALL_HEIGHT_LIMIT 10000  
+
+
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 1024
 # endif
@@ -49,6 +56,24 @@ typedef enum e_wall_dir
 	EAST,
 	WEST
 }	t_wall_dir;
+
+typedef enum e_error
+{
+	ERR_FILE = 2,
+	ERR_EXT,
+	NO_EXT,
+	ERR_DUP,
+	ERR_IS_DIR,
+	ERR_READ,
+	INVALID_CHAR,
+	MULTI_PLAYER,
+	NO_PLAYER,
+	NO_FILE,
+	ERR_CONFIG,
+	ERR_RGB,
+	// NO_CONFIG,
+	MAP_LINE,
+}				t_error;
 
 typedef struct s_player
 {
@@ -100,48 +125,30 @@ typedef struct s_map
 	int			player_y;
 }				t_map;
 
-
-typedef enum e_error
-{
-	ERR_FILE = 2,
-	ERR_EXT,
-	NO_EXT,
-	ERR_DUP,
-	ERR_IS_DIR,
-	ERR_READ,
-	INVALID_CHAR,
-	MULTI_PLAYER,
-	NO_PLAYER,
-	NO_FILE,
-	ERR_CONFIG,
-	ERR_RGB,
-	// NO_CONFIG,
-	MAP_LINE,
-}				t_error;
-
 typedef struct s_game
 {
     mlx_t			*mlx;
-	mlx_t			*mlx;
-	mlx_window_t	*win;
 	mlx_image_t		*img;
-	t_player	player;
-	t_map		map;
-	t_ray		ray;
-	t_graphics	graphics;
-}				t_game;
+    void             *win;
+    t_player player;
+    t_map    map;
+    t_ray   ray;
+    t_graphics graphics;
+}   t_game;
 
-void    		init_mlx(t_game *game);
-void			run_game(t_game *game);
-int				read_map(t_game *game, char *argv);
-void			free_map(t_game *game);
-int				validate_map_configuration(t_game *game);
+int    init_game(t_game *game);
+int   run_game(t_game *game);
+void    render_graphics(void *param);
+void	control_player(mlx_key_data_t keydata, void *param);
+void    clean_exit(t_game *game, char *msg);
+void	handle_esc(mlx_key_data_t keydata, t_game *game);
+void 	raycast(t_game *game);
+void	render_minimap(t_game *game);
+int	load_textures(t_game *game);
+mlx_image_t  *select_texture(t_game *game, t_ray *ray);
+int  calculate_tex_x(t_ray *ray, mlx_image_t *tex, t_player *player);
+void draw_vertical_line(t_game *game, int x, t_ray *ray, mlx_image_t *tex);
+uint32_t create_rgba(t_color color);
 
-// void    render_graphics(t_game *game);
-// void	control_player(mlx_key_data_t keydata, void *param);
-// void    clean_exit(t_game *game);
-// void	handle_esc(mlx_key_data_t keydata, t_game *game);
-
-// int run_game(argv);
 #endif
 

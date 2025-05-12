@@ -25,21 +25,52 @@ static int	init_mlx(t_game *game)
 	return (0);
 }
 
+int set_player_dir(t_game *game, char dir)
+{
+	if (dir == 'N')
+	{
+		game->player.dir_x = 0;
+		game->player.dir_y = -1;
+		game->player.plane_x = -0.66;
+	}
+	else if (dir == 'S')
+	{
+		game->player.dir_x = 0;
+		game->player.dir_y = 1;
+		game->player.plane_x = 0.66;
+	}
+	else if (dir == 'E')
+	{
+		game->player.dir_x = 1;
+		game->player.dir_y = 0;
+		game->player.plane_y = -0.66;
+	}
+	else if (dir == 'W')
+	{
+		game->player.dir_x = -1;
+		game->player.dir_y = 0;
+		game->player.plane_y = 0.66;
+	}
+	return (0);
+}
+
+
+
 int	init_player(t_game *game)
 {
 	game->player.pos_x = 3;
 	game->player.pos_y = 3;
-	game->player.dir_x = 1.0;
-	game->player.dir_y = 0.0;
-	game->player.plane_x = 0.0;
-	game->player.plane_y = 0.66;
+	game->player.dir_x = 0;
+	game->player.dir_y = 0;
+	game->player.plane_x = 0;
+	game->player.plane_y = 0;
 	return (0);
 }
 
 int	init_graphics(t_game *game)
 {
 	game->graphics.floor_color.r = 0;
-	game->graphics.floor_color.g = 0;
+	game->graphics.floor_color.g = 200;
 	game->graphics.floor_color.b = 0;
 	game->graphics.ceiling_color.r = 0;
 	game->graphics.ceiling_color.g = 0;
@@ -55,6 +86,8 @@ int	init_game(t_game *game)
 {
 	if (init_player(game))
 		return (1);
+	game->map.start_dir = 'W';
+	set_player_dir(game, game->map.start_dir);
 	if (init_mlx(game))
 		return (1);
 	if (mlx_image_to_window(game->mlx, game->img, 0, 0) == -1)

@@ -1,5 +1,7 @@
 #include "../../include/cub3d.h"
 
+
+
 int calculate_tex_x(t_ray *ray, mlx_image_t *tex, t_player *player)
 {
     double  wall_x;
@@ -12,7 +14,6 @@ int calculate_tex_x(t_ray *ray, mlx_image_t *tex, t_player *player)
     ray->tex_x = (int)(wall_x * (double)tex->width);
     if ((ray->side == 0 && ray->dir_x < 0) || (ray->side == 1 && ray->dir_y < 0))
         ray->tex_x = tex->width - ray->tex_x - 1;
-    
     return (ray->tex_x);
 }
 
@@ -39,7 +40,7 @@ static uint32_t get_texture_color(mlx_image_t *tex, int tex_x, int tex_y)
 {
     int     tex_index;
 
-    tex_y = tex_y & (tex->height - 1);
+    tex_y = (tex_y % tex->height);
     tex_index = (tex_y * tex->width + tex_x) * 4;
     return (
         (tex->pixels[tex_index + 0] << 24)
@@ -49,21 +50,7 @@ static uint32_t get_texture_color(mlx_image_t *tex, int tex_x, int tex_y)
     );
 }
 
-uint32_t create_rgba(t_color color)
-{
-    uint8_t r;
-    uint8_t g;
-    uint8_t b;
 
-    r = (uint8_t)color.r;
-    g = (uint8_t)color.g;
-    b = (uint8_t)color.b;
-    
-    return ((uint32_t)r << 24) | 
-           ((uint32_t)g << 16) | 
-           ((uint32_t)b << 8) | 
-           0xFF;
-}
 
 // Draws a vertical line on the screen representing a slice of the wall texture.
 // Parameters:
@@ -92,11 +79,11 @@ void draw_vertical_line(t_game *game, int x, t_ray *ray, mlx_image_t *tex)
         ray->tex_pos += ray->step;
         y++;
     }
-    y = ray->draw_end + 1;
     while (y < (int)game->img->height)
     {
         mlx_put_pixel(game->img, x, y, create_rgba(game->graphics.floor_color));
         y++;
     }
 }
+
 
