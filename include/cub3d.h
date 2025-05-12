@@ -98,10 +98,6 @@ typedef struct s_graphics
     mlx_image_t *south;
     mlx_image_t *west;
     mlx_image_t *east;
-	mlx_image_t north;
-	mlx_image_t south;
-	mlx_image_t west;
-	mlx_image_t east;
 	t_color		floor_color;
 	t_color		ceiling_color;
 }				t_graphics;

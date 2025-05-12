@@ -117,7 +117,7 @@ static void	perform_dda(t_ray *ray, t_game *game)
 		}
 		if ((ray->map_x >= 0 && ray->map_x < game->map.width
 				&& ray->map_y >= 0 && ray->map_y < game->map.height)
-			&& (game->map.map[ray->map_y][ray->map_x] == '1'))
+			&& (game->map.map_grid[ray->map_y][ray->map_x] == '1'))
 			ray->hit = 1;
 		else if (ray->map_x < 0 || ray->map_x >= game->map.width
 			|| ray->map_y < 0 || ray->map_y >= game->map.height)

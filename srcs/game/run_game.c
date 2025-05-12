@@ -1,4 +1,4 @@
-#include "cub3d.h"
+#include "../../include/cub3d.h"
 
 void rotate_player(t_game *game, double angle)
 {
@@ -28,7 +28,7 @@ void	update_player(t_game *game, double move_x, double move_y)
 		return ;
 	map_x = (int)new_x;
 	map_y = (int)new_y;
-	if (game->map.map[map_y][map_x] != '1')
+	if (game->map.map_grid[map_y][map_x] != '1')
 	{
 		game->player.pos_x = new_x;
 		game->player.pos_y = new_y;
@@ -70,6 +70,4 @@ int run_game(t_game *game)
 	mlx_loop_hook(game->mlx, render_graphics, game);
 	mlx_loop(game->mlx);
 	return (0);
-    clean_exit(game);
-
 }
