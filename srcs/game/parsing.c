@@ -57,14 +57,16 @@ void free_map(t_game *game)
 	game->map.south_texture = NULL;
 	game->map.west_texture = NULL;
 	game->map.east_texture = NULL;
+	// free(game);
+	// game = NULL;
 	}
 
-int	get_height(t_game *game)
+int	get_height(t_game *game, char *filename)
 {
 	char	*gnl;
 	int		i;
 
-	game->map.fd = open(game->map.file_path, O_RDONLY);
+	game->map.fd = open(filename, O_RDONLY);
 	if (game->map.fd == -1)
 		return (-1);
 	gnl = get_next_line(game->map.fd);
@@ -95,7 +97,7 @@ void	init_map_struct(t_game *game)
 	game->map.start_dir = '\0';
 	game->map.map_grid = NULL;
 	game->map.map_data = NULL;
-	game->map.file_path = NULL;
+	// game->map.file_path = NULL;
 	game->map.north_texture = NULL;
 	game->map.south_texture = NULL;
 	game->map.west_texture = NULL;
@@ -129,14 +131,14 @@ int	read_map(t_game *game, char *argv)
 	int height;
 
 	init_map_struct(game);
-	game->map.file_path = argv;
-	height = get_height(game);
+	// game->map.file_path = argv;
+	height = get_height(game, argv);
 	if (height == -1)
 		return (return_error(game, "Error:  Invalid map"));
 	game->map.map_grid = ft_calloc(height + 1, sizeof(char *));
 	if (!game->map.map_grid)
 		return (return_error(game, "Error: Failed to allocate map grid"));
-	game->map.fd = open(game->map.file_path, O_RDONLY);
+	game->map.fd = open(argv, O_RDONLY);
 	if (game->map.fd == -1)
 		return (return_error(game, "Error: Failed to open map file"));
 	if (allocate_map_grid(game, height))
