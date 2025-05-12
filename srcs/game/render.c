@@ -46,6 +46,7 @@ static mlx_image_t	*load_image(t_game *game, const char *path)
  */
 int	load_textures(t_game *game)
 {
+
 	game->graphics.north = load_image(game, "./assets/north.png");
     game->graphics.south = load_image(game, "./assets/south.png");
     game->graphics.east = load_image(game, "./assets/east.png");

@@ -12,7 +12,10 @@
 # define HEIGHT 1080
 # define PI 3.14159265358979323846
 # define MOVE_SPEED 0.1
-# define ROTATE_SPEED 0.1
+# define ROTATE_SPEED 0.2
+# define X_SIDE 0
+# define Y_SIDE 1
+# define WALL_HEIGHT_LIMIT 10000  
 
 
 
@@ -114,4 +117,6 @@ int	load_textures(t_game *game);
 mlx_image_t  *select_texture(t_game *game, t_ray *ray);
 int  calculate_tex_x(t_ray *ray, mlx_image_t *tex, t_player *player);
 void draw_vertical_line(t_game *game, int x, t_ray *ray, mlx_image_t *tex);
+uint32_t create_rgba(t_color color);
+
 #endif

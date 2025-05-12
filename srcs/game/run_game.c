@@ -6,7 +6,6 @@ void rotate_player(t_game *game, double angle)
     double old_dir_x;
     double old_plane_x;
 
-    // Save current direction and plane x components
     old_dir_x = game->player.dir_x;
     old_plane_x = game->player.plane_x;
     game->player.dir_x = game->player.dir_x * cos(angle) - game->player.dir_y * sin(angle);
@@ -56,9 +55,9 @@ void control_player(mlx_key_data_t keydata, void *param)
             update_player(game, -game->player.dir_y * move, game->player.dir_x * move);
         if (keydata.key == MLX_KEY_D)
             update_player(game, game->player.dir_y * move, -game->player.dir_x * move);
-        if (keydata.key == MLX_KEY_RIGHT)
-            rotate_player(game, rotate);
         if (keydata.key == MLX_KEY_LEFT)
+            rotate_player(game, rotate);
+        if (keydata.key == MLX_KEY_RIGHT)
             rotate_player(game, -rotate);
     }
 }
