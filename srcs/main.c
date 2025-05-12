@@ -31,18 +31,31 @@ int	main(int argc, char **argv)
 		ft_putstr_fd("Error\nPlease provide a .cub file.\n", 2);
 		return (1);
 	}
-	game = malloc(sizeof(t_game));
+	game = ft_calloc(1, sizeof(t_game));
 	if (!game)
 	{
 		ft_putstr_fd("Error\nFailed to allocate memory for game.\n", 2);
 		return (1);
 	}
-	// init_and_validate_map(argv[1]);
-	game->map.map = map; // Placeholder for actual map loading
-	game->map.width = 8;
-	game->map.height = 8;
-	if (run_game(game))
-		clean_exit(game, "Error\nFailed to run game.\n");
-	clean_exit(game, NULL);
+
+
+	// read_map(game, argv[1]);
+	// validate_map_configuration(game);
+
+	// printf("\n\033[1;33m########## main ###############\033[0m\n\n");
+	// printf("NO: %s\nSO: %s\nWE: %s\nEA: %s\n", 
+	// 	game->map.north_texture, game->map.south_texture,
+	// 	game->map.west_texture, game->map.east_texture);
+	// printf("C: %d, %d, %d\n", game->graphics.ceiling_color.r, 
+	// 	game->graphics.ceiling_color.g, game->graphics.ceiling_color.b);
+	// printf("F: %d, %d, %d\n", game->graphics.floor_color.r, 
+	// 	game->graphics.floor_color.g, game->graphics.floor_color.b);
+	// printf("Player start direction: %c\n", game->map.start_dir);
+	// printf("Player found at position: [%d][%d]\n", game->map.player_x, game->map.player_y);
+
+	
+	// if (game)
+	// 	free_map(game);
+	free(game);
 	return (0);
 }

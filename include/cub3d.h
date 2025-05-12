@@ -1,9 +1,11 @@
 #ifndef CUB3D_H
 # define CUB3D_H
 
+# include <errno.h>
 # include <fcntl.h>
 # include <math.h>
 # include <stdio.h>
+# include <string.h>
 # include <string.h>
 # include "./MLX42/MLX42.h"
 # include "../libft/libft.h"
@@ -11,10 +13,10 @@
 # define WIDTH 1920
 # define HEIGHT 1080
 # define PI 3.14159265358979323846
-# define MOVE_SPEED 0.1
-# define ROTATE_SPEED 0.1
 
-
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 1024
+# endif
 
 typedef struct s_ray
 {
@@ -56,13 +58,13 @@ typedef struct s_player
 	double		dir_y;
 	double		plane_x;
 	double		plane_y;
-}   t_player;
+}				t_player;
 
 typedef struct s_color
 {
-	int r;
-	int g;
-	int b;
+	int			r;
+	int			g;
+	int			b;
 }				t_color;
 
 typedef struct s_graphics
@@ -71,47 +73,75 @@ typedef struct s_graphics
     mlx_image_t *south;
     mlx_image_t *west;
     mlx_image_t *east;
+	mlx_image_t north;
+	mlx_image_t south;
+	mlx_image_t west;
+	mlx_image_t east;
 	t_color		floor_color;
 	t_color		ceiling_color;
-}  t_graphics;
+}				t_graphics;
 
 typedef struct s_map
 {
-    char **map;
-    int width;
-    int height;
-    char start_dir;
-    int			player_x;
+	int			fd;
+	int			width;
+	int			height;
+	// char		*file_path;
+	char		**map_grid;
+	char 		**map_data;
+	char		start_dir;
+	int 		floor_set;
+	int 		ceiling_set;
+	char 		*north_texture;
+	char 		*south_texture;
+	char 		*west_texture;
+	char 		*east_texture;
+	int			player_x;
 	int			player_y;
-}   t_map;
+}				t_map;
 
-typedef struct s_parser
+
+typedef enum e_error
 {
-// something like this for parsing
-}   t_parser;
+	ERR_FILE = 2,
+	ERR_EXT,
+	NO_EXT,
+	ERR_DUP,
+	ERR_IS_DIR,
+	ERR_READ,
+	INVALID_CHAR,
+	MULTI_PLAYER,
+	NO_PLAYER,
+	NO_FILE,
+	ERR_CONFIG,
+	ERR_RGB,
+	// NO_CONFIG,
+	MAP_LINE,
+}				t_error;
 
 typedef struct s_game
 {
     mlx_t			*mlx;
+	mlx_t			*mlx;
+	mlx_window_t	*win;
 	mlx_image_t		*img;
-    void             *win;
-    t_player player;
-    t_map    map;
-    t_ray   ray;
-    t_graphics graphics;
-    t_parser parser;
-}   t_game;
+	t_player	player;
+	t_map		map;
+	t_ray		ray;
+	t_graphics	graphics;
+}				t_game;
 
-int    init_game(t_game *game);
-int   run_game(t_game *game);
-void    render_graphics(void *param);
-void	control_player(mlx_key_data_t keydata, void *param);
-void    clean_exit(t_game *game, char *msg);
-void	handle_esc(mlx_key_data_t keydata, t_game *game);
-void 	raycast(t_game *game);
-void	render_minimap(t_game *game);
-int	load_textures(t_game *game);
-mlx_image_t  *select_texture(t_game *game, t_ray *ray);
-int  calculate_tex_x(t_ray *ray, mlx_image_t *tex, t_player *player);
-void draw_vertical_line(t_game *game, int x, t_ray *ray, mlx_image_t *tex);
+void    		init_mlx(t_game *game);
+void			run_game(t_game *game);
+int				read_map(t_game *game, char *argv);
+void			free_map(t_game *game);
+int				validate_map_configuration(t_game *game);
+
+// void    render_graphics(t_game *game);
+// void	control_player(mlx_key_data_t keydata, void *param);
+// void    clean_exit(t_game *game);
+// void	handle_esc(mlx_key_data_t keydata, t_game *game);
+
+// int run_game(argv);
 #endif
+
