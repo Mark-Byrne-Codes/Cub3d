@@ -14,7 +14,6 @@ int calculate_tex_x(t_ray *ray, mlx_image_t *tex, t_player *player)
     ray->tex_x = (int)(wall_x * (double)tex->width);
     if ((ray->side == 0 && ray->dir_x < 0) || (ray->side == 1 && ray->dir_y < 0))
         ray->tex_x = tex->width - ray->tex_x - 1;
-    
     return (ray->tex_x);
 }
 
