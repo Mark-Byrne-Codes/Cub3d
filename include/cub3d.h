@@ -51,6 +51,24 @@ typedef enum e_wall_dir
 	WEST
 }	t_wall_dir;
 
+typedef enum e_error
+{
+	ERR_FILE = 2,
+	ERR_EXT,
+	NO_EXT,
+	ERR_DUP,
+	ERR_IS_DIR,
+	ERR_READ,
+	INVALID_CHAR,
+	MULTI_PLAYER,
+	NO_PLAYER,
+	NO_FILE,
+	ERR_CONFIG,
+	ERR_RGB,
+	// NO_CONFIG,
+	MAP_LINE,
+}				t_error;
+
 typedef struct s_player
 {
 	double		pos_x;
@@ -80,18 +98,23 @@ typedef struct s_graphics
 
 typedef struct s_map
 {
-    char **map;
-    int width;
-    int height;
-    char start_dir;
-    int			player_x;
+	int			fd;
+	int			width;
+	int			height;
+	// char		*file_path;
+	char		**map_grid;
+	char 		**map_data;
+	char		start_dir;
+	int 		floor_set;
+	int 		ceiling_set;
+	char 		*north_texture;
+	char 		*south_texture;
+	char 		*west_texture;
+	char 		*east_texture;
+	int			player_x;
 	int			player_y;
-}   t_map;
+}				t_map;
 
-typedef struct s_parser
-{
-// something like this for parsing
-}   t_parser;
 
 typedef struct s_game
 {
@@ -102,7 +125,6 @@ typedef struct s_game
     t_map    map;
     t_ray   ray;
     t_graphics graphics;
-    t_parser parser;
 }   t_game;
 
 int    init_game(t_game *game);
