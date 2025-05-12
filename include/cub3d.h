@@ -1,9 +1,11 @@
 #ifndef CUB3D_H
 # define CUB3D_H
 
+# include <errno.h>
 # include <fcntl.h>
 # include <math.h>
 # include <stdio.h>
+# include <string.h>
 # include <string.h>
 # include "./MLX42/MLX42.h"
 # include "../libft/libft.h"
@@ -11,6 +13,7 @@
 # define WIDTH 1920
 # define HEIGHT 1080
 # define PI 3.14159265358979323846
+
 # define MOVE_SPEED 0.1
 # define ROTATE_SPEED 0.2
 # define X_SIDE 0
@@ -18,6 +21,9 @@
 # define WALL_HEIGHT_LIMIT 10000  
 
 
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 1024
+# endif
 
 typedef struct s_ray
 {
@@ -77,13 +83,13 @@ typedef struct s_player
 	double		dir_y;
 	double		plane_x;
 	double		plane_y;
-}   t_player;
+}				t_player;
 
 typedef struct s_color
 {
-	int r;
-	int g;
-	int b;
+	int			r;
+	int			g;
+	int			b;
 }				t_color;
 
 typedef struct s_graphics
@@ -92,9 +98,13 @@ typedef struct s_graphics
     mlx_image_t *south;
     mlx_image_t *west;
     mlx_image_t *east;
+	mlx_image_t north;
+	mlx_image_t south;
+	mlx_image_t west;
+	mlx_image_t east;
 	t_color		floor_color;
 	t_color		ceiling_color;
-}  t_graphics;
+}				t_graphics;
 
 typedef struct s_map
 {
@@ -114,7 +124,6 @@ typedef struct s_map
 	int			player_x;
 	int			player_y;
 }				t_map;
-
 
 typedef struct s_game
 {
@@ -142,3 +151,4 @@ void draw_vertical_line(t_game *game, int x, t_ray *ray, mlx_image_t *tex);
 uint32_t create_rgba(t_color color);
 
 #endif
+
