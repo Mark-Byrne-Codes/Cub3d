@@ -6,6 +6,7 @@
 # include <math.h>
 # include <stdio.h>
 # include <string.h>
+# include <string.h>
 # include "./MLX42/MLX42.h"
 # include "../libft/libft.h"
 
@@ -19,25 +20,40 @@
 
 typedef struct s_ray
 {
-	double		x;
-	double		y;
-	int			map_x;
-	int			map_y;
-	double		side_dist_x;
-	double		side_dist_y;
-	double		delta_dist_x;
-	double		delta_dist_y;
-	double		perp_wall_dist;
-	int			step_x;
-	int			step_y;
-	int			side;
-	int			hit;
-}				t_ray;
+    double  dir_x;
+    double  dir_y;
+    int     map_x;
+    int     map_y;
+    double  side_dist_x;
+    double  side_dist_y;
+    double  delta_dist_x;
+    double  delta_dist_y;
+    double  perp_wall_dist;
+    int     step_x;
+    int     step_y;
+    int     hit;
+    int     side;
+    int     line_height;
+    int     draw_start;
+    int     draw_end;
+    int     tex_x;
+    double  tex_pos;
+    double  step;
+    uint32_t color;
+}   t_ray;
+
+typedef enum e_wall_dir
+{
+	NORTH,
+	SOUTH,
+	EAST,
+	WEST
+}	t_wall_dir;
 
 typedef struct s_player
 {
-	double		x;
-	double		y;
+	double		pos_x;
+	double		pos_y;
 	double		dir_x;
 	double		dir_y;
 	double		plane_x;
@@ -53,6 +69,10 @@ typedef struct s_color
 
 typedef struct s_graphics
 {
+    mlx_image_t *north;
+    mlx_image_t *south;
+    mlx_image_t *west;
+    mlx_image_t *east;
 	mlx_image_t north;
 	mlx_image_t south;
 	mlx_image_t west;
@@ -101,6 +121,7 @@ typedef enum e_error
 
 typedef struct s_game
 {
+    mlx_t			*mlx;
 	mlx_t			*mlx;
 	mlx_window_t	*win;
 	mlx_image_t		*img;
@@ -123,3 +144,4 @@ int				validate_map_configuration(t_game *game);
 
 // int run_game(argv);
 #endif
+

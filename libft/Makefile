@@ -6,7 +6,7 @@
 #    By: hahamdan <hahamdan@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/28 14:57:50 by mbyrne            #+#    #+#              #
-#    Updated: 2025/05/07 18:03:51 by hahamdan         ###   ########.fr        #
+#    Updated: 2025/05/12 13:59:01 by hahamdan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,7 +31,8 @@ LIBFT_SRC = ft_isalpha.c ft_isdigit.c ft_isalnum.c ft_isascii.c ft_isprint.c \
             ft_lstclear.c ft_lstiter.c
 
 # Source files for get_next_line
-GNL_SRC = get_next_line/get_next_line.c 
+GNL_SRC = get_next_line/get_next_line.c get_next_line/get_next_line_utils.c
+
 # Source files for ft_printf
 FT_PRINTF_SRC = ft_printf/ft_printf.c ft_printf/ft_printf_digits.c ft_printf/ft_printf_char.c
 

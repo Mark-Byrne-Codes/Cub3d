@@ -1,8 +1,30 @@
 #include "../../include/cub3d.h"
 
+
 int	main(int argc, char **argv)
 {
 	t_game	*game;
+    static char *map[9] = {
+
+        "11111111",
+        
+        "10000001",
+        
+        "10101001",
+        
+        "10000001",
+        
+        "10101001",
+        
+        "10000001",
+        
+        "10000001",
+        
+        "11111111",
+        
+        NULL
+        
+        };
 
 	if (argc != 2 || !ft_strnstr(argv[1], ".cub", ft_strlen(argv[1])))
 	{
