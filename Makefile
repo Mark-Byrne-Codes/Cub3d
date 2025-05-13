@@ -8,13 +8,15 @@ HEADERS	:= -I $(LIBMLX)/include
 LIBS    := $(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm
 		
 SRCS	:= srcs/main.c \
+			srcs/utils.c \
 			srcs/game/run_game.c \
 			srcs/game/init.c \
-			srcs/game/utils.c \
+			srcs/game/game_utils.c \
 			srcs/game/raycast_utils.c \
 			srcs/game/render.c \
 			srcs/game/raycast.c \
 			srcs/game/minimap.c \
+			srcs/parse/parsing.c
 
 OBJS	:= ${SRCS:.c=.o}
 

@@ -47,10 +47,10 @@ static mlx_image_t	*load_image(t_game *game, const char *path)
 int	load_textures(t_game *game)
 {
 
-	game->graphics.north = load_image(game, "./assets/north.png");
-    game->graphics.south = load_image(game, "./assets/south.png");
-    game->graphics.east = load_image(game, "./assets/east.png");
-    game->graphics.west = load_image(game, "./assets/west.png");
+	game->graphics.north = load_image(game, game->map.north_texture);
+    game->graphics.south = load_image(game, game->map.south_texture);
+    game->graphics.east = load_image(game, game->map.east_texture);
+    game->graphics.west = load_image(game, game->map.west_texture);
     return (0);
 }
 
@@ -62,6 +62,6 @@ void	render_graphics(void *param)
     game =(t_game *)param;
     memset(game->img->pixels, 0, WIDTH * HEIGHT * sizeof(int32_t));
     raycast(game);
-    render_minimap(game);
+    //render_minimap(game);
 }
 

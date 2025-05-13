@@ -13,7 +13,6 @@ void rotate_player(t_game *game, double angle)
     game->player.plane_y = old_plane_x * sin(angle) + game->player.plane_y * cos(angle);
 }
 
-
 void	update_player(t_game *game, double move_x, double move_y)
 {
 
@@ -28,7 +27,7 @@ void	update_player(t_game *game, double move_x, double move_y)
 		return ;
 	map_x = (int)new_x;
 	map_y = (int)new_y;
-	if (game->map.map_grid[map_y][map_x] != '1')
+	if (game->map.map_data[map_y][map_x] != '1')
 	{
 		game->player.pos_x = new_x;
 		game->player.pos_y = new_y;
@@ -66,6 +65,8 @@ int run_game(t_game *game)
 {
 	if (init_game(game))
 		return (1);
+    game->player.pos_x = game->map.player_x + 0.5;
+    game->player.pos_y = game->map.player_y + 0.5;
 	mlx_key_hook(game->mlx, control_player, game);
 	mlx_loop_hook(game->mlx, render_graphics, game);
 	mlx_loop(game->mlx);

@@ -41,7 +41,7 @@ static void	render_map(t_game *game)
             map_y = floor(y / scale_y);
             if (map_x >= 0 && map_x < game->map.width &&
                 map_y >= 0 && map_y < game->map.height &&
-                game->map.map_grid[map_y][map_x] == '1')
+                game->map.map_data[map_y][map_x] == '1')
                 draw_minimap_pixel(game, MINIMAP_X + x, MINIMAP_Y + y, MINIMAP_WALL_COLOR);
             else
                 draw_minimap_pixel(game, MINIMAP_X + x, MINIMAP_Y + y, MINIMAP_FLOOR_COLOR);

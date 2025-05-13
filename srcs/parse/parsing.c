@@ -415,28 +415,34 @@ int 	get_map_height(t_game *game, int i)
 int  find_player(t_game *game);
 int allocate_map_data(t_game *game, int i)
 {
-	int j;
+    int j;
 
-	game->map.height = get_map_height(game, i);
-	game->map.map_data = ft_calloc(game->map.height + 1, sizeof(char *));
-	if (!game->map.map_data)
-		return (return_error(game, "Error: Failed to allocate map data"));
-	j = 0;
-	while (game->map.map_grid[i] != NULL)
-	{
-		game->map.map_data[j] = ft_strdup(game->map.map_grid[i]);
-		if (!game->map.map_data[j])
-			return (return_error(game, "Error: Failed to allocate map row"));
-		j++;
-		i++;
-	}
-	printf("\n\033[1;33m########## Map data ###############\033[0m\n\n");
-	i = -1;
-	while (++i < game->map.height)
-		printf("%s", game->map.map_data[i]);
-	printf("\n\n");
-	return (EXIT_SUCCESS);
-	
+    game->map.height = get_map_height(game, i);
+    game->map.map_data = ft_calloc(game->map.height + 1, sizeof(char *));
+    game->map.widths = ft_calloc(game->map.height, sizeof(int));
+    if (!game->map.map_data || !game->map.widths)
+        return (return_error(game, "Error: Failed to allocate map data"));
+    j = 0;
+    game->map.max_width = 0;
+    while (game->map.map_grid[i] != NULL)
+    {
+        game->map.map_data[j] = ft_strtrim(game->map.map_grid[i], "\n");
+        if (!game->map.map_data[j])
+            return (return_error(game, "Error: Failed to allocate map row"));
+        game->map.widths[j] = ft_strlen(game->map.map_data[j]);
+        printf("map width: %d\n", game->map.widths[j]);
+        if (game->map.widths[j] > game->map.max_width)
+            game->map.max_width = game->map.widths[j];
+        j++;
+        i++;
+    }
+	game->map.width = game->map.max_width;
+    printf("\n\033[1;33m########## Map data ###############\033[0m\n\n");
+    i = -1;
+    while (++i < game->map.height)
+        printf("%s\n", game->map.map_data[i]);
+    printf("\n\n");
+    return (EXIT_SUCCESS);
 }
 
 int 	handle_map_error(int err)
@@ -457,41 +463,37 @@ int 	handle_map_error(int err)
 // printf("\033[1;32mPlayer validation successful!\033[0m\n");
 int find_player(t_game *game)
 {
-	int		i;
-	int		j;
-	char	c;
-	int		found;
-	char	*trimmed_line;
+    int        i;
+    int        j;
+    char    c;
+    int        found;
 
-	printf("\n\033[1;33m########## Player Validation ###############\033[0m\n");
-	i = -1;
-	found = 0;
-	while (game->map.map_data[++i])
-	{
-		trimmed_line = ft_strtrim(game->map.map_data[i], "\n");
-		if (!trimmed_line)
-			return (EXIT_FAILURE);
-		j = -1;
-		while (trimmed_line[++j])
-		{
-			c = trimmed_line[j];
-			if (!ft_strchr("01NSEW ", c))
-				return (free(trimmed_line), INVALID_CHAR);
-			if (ft_strchr("NSEW", c))
-			{
-				found++;
-				game->map.start_dir = c;
-				game->map.player_x = j;
-				game->map.player_y = i;
-				if (found > 1)
-					return (free(trimmed_line), MULTI_PLAYER);
-			}
-		}
-		free(trimmed_line);
-	}
-	if (found == 0)
-		return (NO_PLAYER);
-	return (EXIT_SUCCESS);
+    printf("\n\033[1;33m########## Player Validation ###############\033[0m\n");
+    i = -1;
+    found = 0;
+    while (game->map.map_data[++i])
+    {
+        j = -1;
+        while (game->map.map_data[i][++j])
+        {
+            c = game->map.map_data[i][j];
+            if (!ft_strchr("01NSEW ", c))
+                return (INVALID_CHAR);
+            if (ft_strchr("NSEW", c))
+            {
+                found++;
+                game->map.start_dir = c;
+                game->map.player_x = j;
+                game->map.player_y = i;
+                if (found > 1)
+                    return (MULTI_PLAYER);
+            }
+        }
+    }
+    if (found == 0)
+        return (NO_PLAYER);
+    printf("\033[1;32mPlayer validation successful!\033[0m\n");
+    return (EXIT_SUCCESS);
 }
 
 int 	validate_map_data(t_game *game, int i)
