@@ -107,6 +107,8 @@ typedef struct s_map
 	int			fd;
 	int			width;
 	int			height;
+	int			max_width;
+	int			*widths;
 	// char		*file_path;
 	char		**map_grid;
 	char 		**map_data;
@@ -145,6 +147,10 @@ mlx_image_t  *select_texture(t_game *game, t_ray *ray);
 int  calculate_tex_x(t_ray *ray, mlx_image_t *tex, t_player *player);
 void draw_vertical_line(t_game *game, int x, t_ray *ray, mlx_image_t *tex);
 uint32_t create_rgba(t_color color);
+int set_player_dir(t_game *game, char dir);
+int				read_map(t_game *game, char *argv);
+void			free_map(t_game *game);
+int				validate_map_configuration(t_game *game);
 
 #endif
 

@@ -1,18 +1,6 @@
 #include "../../include/cub3d.h"
 
-/**
- * Initializes ray properties for a screen column
- * @param ray Ray structure to initialize
- * @param game Main game structure containing player/map data
- * @param x Current screen column being processed
- * @note The function performs the following steps:
- * 1. Converts screen x-coordinate to camera space (-1 to +1)
- * 2. Calculates ray direction using player direction and camera plane
- * 3. Sets initial grid cell position
- * 4. Calculates delta distances (distance needed to move from one grid cell to the next)
- * 5. Handles division by zero cases for horizontal/vertical rays
- * 6. Initializes the hit flag
- */
+
 static void	init_ray(t_ray *ray, t_game *game, int x)
 {
 	double camera_x;
@@ -31,26 +19,7 @@ static void	init_ray(t_ray *ray, t_game *game, int x)
 	ray->hit = 0;
 }
 
-/**
- * @brief Calculate step direction and initial side distances for DDA algorithm
- *
- * This function determines which direction the ray will step through the grid
- * (positive or negative in both x and y) and calculates the initial side distances.
- * Side distances represent how far the ray must travel from its starting point
- * to reach the next x or y grid line.
- *
- * @param ray Pointer to the ray structure to be updated
- * @param game Pointer to the game structure containing player position
- * 
- * @details The function performs the following steps:
- * 1. Determines the x-direction step (-1 for left, 1 for right) based on ray direction
- * 2. Calculates initial x-side distance to the nearest grid boundary
- * 3. Determines the y-direction step (-1 for up, 1 for down) based on ray direction
- * 4. Calculates initial y-side distance to the nearest grid boundary
- *
- * @note Side distances are scaled by delta distances to normalize step lengths.
- * This makes the DDA algorithm independent of ray length and direction.
- */
+
 static void	calc_step(t_ray *ray, t_game *game)
 {
 	if (ray->dir_x < 0)
@@ -78,74 +47,33 @@ static void	calc_step(t_ray *ray, t_game *game)
 }
 
 
-/**
- * @brief Perform the DDA (Digital Differential Analysis) algorithm for raycasting
- *
- * This function advances the ray through the map grid using the DDA algorithm until
- * it hits a wall or goes out of bounds. DDA is an efficient algorithm for traversing
- * a grid along a ray path, always stepping to the next grid cell in the direction
- * that requires the shortest distance to travel.
- *
- * @param ray Pointer to the ray structure containing direction and step information
- * @param game Pointer to the game structure containing the map data
- * 
- * @details The function performs the following steps:
- * 1. Loops until a wall is hit or the ray goes out of bounds
- * 2. Determines whether to step in the x or y direction (whichever side distance is smaller)
- * 3. Updates the ray's position in the grid and its side distances
- * 4. Records which side of the wall was hit (for texture mapping and lighting)
- * 5. Checks if the new position contains a wall or is out of bounds
- *
- * @note The 'side' variable is set to 0 for x-side hits (vertical walls) and 1 for
- * y-side hits (horizontal walls). This will be used later for shading and texture mapping.
- */
-static void	perform_dda(t_ray *ray, t_game *game)
+
+static void perform_dda(t_ray *ray, t_game *game)
 {
-	while (!ray->hit)
-	{
-		if (ray->side_dist_x < ray->side_dist_y)
-		{
-			ray->side_dist_x += ray->delta_dist_x;
-			ray->map_x += ray->step_x;
-			ray->side = 0;
-		}
-		else
-		{
-			ray->side_dist_y += ray->delta_dist_y;
-			ray->map_y += ray->step_y;
-			ray->side = 1;
-		}
-		if ((ray->map_x >= 0 && ray->map_x < game->map.width
-				&& ray->map_y >= 0 && ray->map_y < game->map.height)
-			&& (game->map.map_grid[ray->map_y][ray->map_x] == '1'))
-			ray->hit = 1;
-		else if (ray->map_x < 0 || ray->map_x >= game->map.width
-			|| ray->map_y < 0 || ray->map_y >= game->map.height)
-			ray->hit = 1;
-	}
+    while (!ray->hit)
+    {
+        if (ray->side_dist_x < ray->side_dist_y)
+        {
+            ray->side_dist_x += ray->delta_dist_x;
+            ray->map_x += ray->step_x;
+            ray->side = 0;
+        }
+        else if (ray->side_dist_y <= ray->side_dist_x)
+        {
+            ray->side_dist_y += ray->delta_dist_y;
+            ray->map_y += ray->step_y;
+            ray->side = 1;
+        }
+        if (ray->map_x >= 0 && ray->map_x < game->map.width
+            && ray->map_y >= 0 && ray->map_y < game->map.height
+            && game->map.map_data[ray->map_y][ray->map_x] == '1')
+            ray->hit = 1;
+        else if (ray->map_x < 0 || ray->map_x >= game->map.width
+                 || ray->map_y < 0 || ray->map_y >= game->map.height)
+            ray->hit = 1;
+    }
 }
 
-/**
- * @brief Calculate wall projection parameters for rendering
- * 
- * This function calculates the perpendicular wall distance, line height,
- * and vertical drawing range for the current raycast column. These values
- * determine how the wall slice will be projected onto the screen while
- * maintaining perspective correction.
- *
- * @param ray Pointer to the ray structure containing intersection data
- * @param game Pointer to the game structure with player and display info
- * 
- * @details The function performs these key operations:
- * 1. Calculates perpendicular distance to wall to avoid fish-eye distortion
- * 2. Determines vertical line height based on distance and screen height
- * 3. Calculates starting and ending Y coordinates for wall rendering
- * 4. Clamps values to screen boundaries to prevent overflow
- * 
- * @note The perpendicular distance calculation differs for x/y side hits
- * to ensure proper perspective correction. The minimum distance clamp
- * prevents division by zero in rendering calculations.
- */
 static void	calc_projection(t_ray *ray, t_game *game)
 {
 	double	pos_x;
