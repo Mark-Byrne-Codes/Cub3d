@@ -29,6 +29,7 @@ int	main(int argc, char **argv)
 		game->graphics.floor_color.g, game->graphics.floor_color.b);
 	printf("Player start direction: %c\n", game->map.start_dir);
 	printf("Player found at position: [%d][%d]\n", game->map.player_x, game->map.player_y);
+  printf("max width: %d\n", game->map.max_width);
 	if (run_game(game))
 		clean_exit(game, "Error\nFailed to run game.\n");
 	clean_exit(game, NULL);

@@ -1,7 +1,7 @@
 {
     "files.associations": {
         "cub3d.h": "c",
-        "cstdint": "c",
-        "libft.h": "c"
-    }
+        "cstdint": "c"
+    },
+    "cmake.sourceDirectory": "/home/hahamdan/github_project/cub3d/MLX42"
 }
