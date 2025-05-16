@@ -39,7 +39,7 @@ typedef struct s_ray
     int     tex_x;
     double  tex_pos;
     double  step;
-    uint32_t color;
+    // uint32_t color;
 }   t_ray;
 
 typedef enum e_wall_dir
@@ -84,8 +84,9 @@ typedef struct s_graphics
 typedef struct s_map
 {
 	int			fd;
-	int			width;
+	int			*widths;
 	int			height;
+	int 		max_width;
 	// char		*file_path;
 	char		**map_grid;
 	char 		**map_data;
@@ -115,7 +116,8 @@ typedef enum e_error
 	NO_FILE,
 	ERR_CONFIG,
 	ERR_RGB,
-	// NO_CONFIG,
+	ERR_IN_MAP,
+	ERR_OUT_MAP,
 	MAP_LINE,
 }				t_error;
 
@@ -136,12 +138,30 @@ void			run_game(t_game *game);
 int				read_map(t_game *game, char *argv);
 void			free_map(t_game *game);
 int				validate_map_configuration(t_game *game);
+int	handle_error(char *line, int err, char *element);
+int	return_error(t_game *game, char *msg);
 
-// void    render_graphics(t_game *game);
-// void	control_player(mlx_key_data_t keydata, void *param);
-// void    clean_exit(t_game *game);
-// void	handle_esc(mlx_key_data_t keydata, t_game *game);
+// int	validate_map_data(t_game *game, int i);
+int check_map_walls(t_game *game);
+char	**duplicate_map(t_game *game);
+int handle_map_error(int err);
+void	free_grid(char **split);
+void	configuration_format(int err);
+int	read_map(t_game *game, char *argv);
+char	**trim_and_split(char *map_line);
+int	load_config_element(t_game *game, char *element, char *line, char **arr);
 
-// int run_game(argv);
+int	create_empty_map(t_game *game, int start_index, int j);
+int	check_map_element(char *element, char **arr);
+int	create_empty_map(t_game *game, int start_index, int j);
+void	free_gnl(int fd);
+char	**duplicate_map(t_game *game);
+
+void    render_graphics(t_game *game);
+void	control_player(mlx_key_data_t keydata, void *param);
+void    clean_exit(t_game *game);
+void	handle_esc(mlx_key_data_t keydata, t_game *game);
+
+int run_game(argv);
 #endif
 

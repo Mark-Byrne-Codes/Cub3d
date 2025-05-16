@@ -4,27 +4,27 @@
 int	main(int argc, char **argv)
 {
 	t_game	*game;
-    static char *map[9] = {
+    // static char *map[9] = {
 
-        "11111111",
+    //     "11111111",
         
-        "10000001",
+    //     "10000001",
         
-        "10101001",
+    //     "10101001",
         
-        "10000001",
+    //     "10000001",
         
-        "10101001",
+    //     "10101001",
         
-        "10000001",
+    //     "10000001",
         
-        "10000001",
+    //     "10000001",
         
-        "11111111",
+    //     "11111111",
         
-        NULL
+    //     NULL
         
-        };
+    //     };
 
 	if (argc != 2 || !ft_strnstr(argv[1], ".cub", ft_strlen(argv[1])))
 	{
@@ -39,10 +39,10 @@ int	main(int argc, char **argv)
 	}
 
 
-	// read_map(game, argv[1]);
-	// validate_map_configuration(game);
+	read_map(game, argv[1]);
+	validate_map_configuration(game);
 
-	// printf("\n\033[1;33m########## main ###############\033[0m\n\n");
+	// printf("\n\033[1;33m############## main #################\033[0m\n");
 	// printf("NO: %s\nSO: %s\nWE: %s\nEA: %s\n", 
 	// 	game->map.north_texture, game->map.south_texture,
 	// 	game->map.west_texture, game->map.east_texture);
@@ -52,10 +52,11 @@ int	main(int argc, char **argv)
 	// 	game->graphics.floor_color.g, game->graphics.floor_color.b);
 	// printf("Player start direction: %c\n", game->map.start_dir);
 	// printf("Player found at position: [%d][%d]\n", game->map.player_x, game->map.player_y);
+	// printf("max width: %d\n", game->map.max_width);
 
 	
-	// if (game)
-	// 	free_map(game);
+	if (game)
+		free_map(game);
 	free(game);
 	return (0);
 }
