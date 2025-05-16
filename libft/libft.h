@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hahamdan <hahamdan@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: mbyrne <mbyrne@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 14:58:23 by mbyrne            #+#    #+#             */
-/*   Updated: 2025/05/12 13:58:53 by hahamdan         ###   ########.fr       */
+/*   Updated: 2025/05/12 15:28:31 by mbyrne           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <unistd.h> 
 # include <limits.h> 
 # include "get_next_line/get_next_line.h"
+# include "ft_printf/ft_printf.h"
 
 typedef struct s_list
 {

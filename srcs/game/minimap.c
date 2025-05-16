@@ -41,7 +41,7 @@ static void	render_map(t_game *game)
             map_y = floor(y / scale_y);
             if (map_x >= 0 && map_x < game->map.width &&
                 map_y >= 0 && map_y < game->map.height &&
-                game->map.map[map_y][map_x] == '1')
+                game->map.map_data[map_y][map_x] == '1')
                 draw_minimap_pixel(game, MINIMAP_X + x, MINIMAP_Y + y, MINIMAP_WALL_COLOR);
             else
                 draw_minimap_pixel(game, MINIMAP_X + x, MINIMAP_Y + y, MINIMAP_FLOOR_COLOR);
@@ -77,34 +77,8 @@ static void	render_player(t_game *game)
     }
 }
 
-static void	draw_view_line(t_game *game)
-{
-    int	px;
-    int	py;
-    int	i;
-    int	x;
-    int	y;
-    double scale_x;
-    double scale_y;
-
-    scale_x = (double)MINIMAP_WIDTH / game->map.width;
-    scale_y = (double)MINIMAP_HEIGHT / game->map.height;
-    px = MINIMAP_X + (int)(game->player.pos_x * scale_x);
-    py = MINIMAP_Y + (int)(game->player.pos_y * scale_y);
-    
-    i = 0;
-    while (i < VIEW_LINE_LENGTH)
-    {
-        x = px + (int)(game->player.dir_x * i * VIEW_LINE_STEP);
-        y = py + (int)(game->player.dir_y * i * VIEW_LINE_STEP);
-        draw_minimap_pixel(game, x, y, MINIMAP_VIEW_COLOR);
-        i++;
-    }
-}
-
 void	render_minimap(t_game *game)
 {
     render_map(game);
     render_player(game);
-    draw_view_line(game);
 }

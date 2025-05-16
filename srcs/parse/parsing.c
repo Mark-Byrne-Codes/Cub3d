@@ -1,6 +1,5 @@
 #include "../../include/cub3d.h"
 
-
 int	check_map_element(char *element, char **arr)
 {
 	if (ft_strcmp(element, "NO") != 0 && ft_strcmp(element, "SO") != 0
@@ -19,6 +18,7 @@ int	check_map_element(char *element, char **arr)
 		return (ERR_CONFIG);
 	return (EXIT_SUCCESS);
 }
+
 void	configuration_format(int err)
 {
 	(void)err;
@@ -32,7 +32,9 @@ void	configuration_format(int err)
 	ft_putstr_fd("C  0,0,0  (RGB values 0-255)\n", STDERR_FILENO);
 }
 
+
 int	check_required_config(t_game *game)
+
 {
 	if (!game->map.north_texture || !game->map.south_texture
 		|| !game->map.west_texture || !game->map.east_texture
@@ -43,10 +45,6 @@ int	check_required_config(t_game *game)
 	}
 	return (EXIT_SUCCESS);
 }
-
-
-
-
 
 
 int	find_player(t_game *game)
@@ -102,7 +100,7 @@ int	validate_map_data(t_game *game, int i)
 int	process_configuration(t_game *game, int i)
 {
 	char	**line;
-
+  
 	while (game->map.map_grid[++i] != NULL)
 	{
 		line = trim_and_split(game->map.map_grid[i]);
@@ -112,6 +110,7 @@ int	process_configuration(t_game *game, int i)
 				return (EXIT_FAILURE);
 			i++;
 			continue ;
+
 		}
 		if (check_map_element(line[0], line) == MAP_LINE)
 		{
@@ -120,7 +119,7 @@ int	process_configuration(t_game *game, int i)
 		}
 		if (load_config_element(game, line[0], line[1], line))
 			return (free_grid(line), EXIT_FAILURE);
-		free_grid(line);
+
 	}
 	if (validate_map_data(game, i - 1))
 		return (EXIT_FAILURE);
@@ -135,3 +134,4 @@ int	validate_map_configuration(t_game *game)
 	// 	return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
+
