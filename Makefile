@@ -1,5 +1,5 @@
 NAME	:= cub3d
-CFLAGS	:= -Wextra -Wall -Werror
+CFLAGS	:= -Wextra -Wall -Werror -g
 CC = cc
 LIBMLX	:= ./MLX42
 LIBFT = libft/libft.a
@@ -12,7 +12,8 @@ SRCS	:= srcs/main.c \
 			srcs/parse/flood_fill.c\
 			srcs/parse/parse_error.c \
 			srcs/parse/init_map.c \
-			srcs/parse/utils.c\
+			srcs/parse/utils1.c\
+			srcs/parse/utils2.c\
 			srcs/parse/validate_map.c\
    
 

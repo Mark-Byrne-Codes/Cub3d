@@ -1,6 +1,41 @@
 #include "../../include/cub3d.h"
 
-int	get_map_height(t_game *game, int i)
+/**
+ * Sets the palyer and its starting position on the map. 
+ * @param game Game state struct that holds map data. 
+ * @param i The starting index to search for the player in the map.
+ * @return 'EXIT_SUCCESS' if the player is successufully set, or
+ * an error code if failed.
+ */
+int	get_player_position(t_game *game, int i)
+{
+	int j;
+	int		found;
+
+	found = 0;
+	while (game->map.map_data[++i])
+	{
+		j = -1;
+		while (game->map.map_data[i][++j])
+		{
+			if (!ft_strchr("01NSEW ", game->map.map_data[i][j]))
+				return (INVALID_CHAR);
+			if (ft_strchr("NSEW", game->map.map_data[i][j]))
+			{
+				found++;
+				game->map.player_x = j;
+				game->map.player_y = i;
+				game->map.start_dir = game->map.map_data[i][j];
+				if (found > 1)
+					return (MULTI_PLAYER);
+			}
+		}
+	}
+	if (found == 0)
+		return (NO_PLAYER);
+	return (EXIT_SUCCESS);
+}
+static int	get_map_height(t_game *game, int i)
 {
 	int	height;
 
@@ -13,22 +48,8 @@ int	get_map_height(t_game *game, int i)
 	return (height);
 }
 
-	// printf("\n\033[1;33m########## Map data ###############\033[0m\n\n");
-	// i = -1;
-	// while (++i < game->map.height)
-	// {
-	// 	j = 0;
-	// 	while (j < (int)game->map.max_width)
-	// 	{
-	// 		if (game->map.map_data[i][j] == ' ')
-	// 			printf("S");
-	// 		else
-	// 			printf("%c", game->map.map_data[i][j]);
-	// 		j++;
-	// 	}
-	// 	printf("\n");
-	// }
-void	fill_map_content(t_game *game, int start_index)
+
+static void	build_map_content(t_game *game, int start_index)
 {
 	int		i;
 	int		j;
@@ -44,55 +65,56 @@ void	fill_map_content(t_game *game, int start_index)
 		i++;
 	}
 }
-
-int	create_empty_map(t_game *game, int start_index, int j)
+static int get_map_width(t_game *game, int start_index)
 {
 	int		i;
 	char	*temp;
 
-	i = start_index - 1;
-	game->map.height = get_map_height(game, start_index);
-	while (game->map.map_grid[++i] && (i - start_index) < game->map.height)
+	i = start_index;
+	while (game->map.map_grid[i] != NULL)
 	{
 		temp = ft_strtrim(game->map.map_grid[i], "\n");
 		if (temp && !*temp)
-			return (free(temp), MAP_LINE);
+			return (free(temp), EXIT_FAILURE);
 		if ((int)ft_strlen(temp) > game->map.max_width)
 			game->map.max_width = ft_strlen(temp);
 		free(temp);
+		i++;
 	}
+	return (EXIT_SUCCESS);
+}
+
+/**
+ * initialize an empty grid for the game map.
+ * Allocates memory for the map and its rows, and initializes
+ * each row with spaces.
+ * @param game Game state struct that holds map data.
+ * @param start_index Index where map data starts.
+ * @return 'MAP_LINE' if theres empty line between map,
+ * 'EXIT_SUCCESS if the map is successfully created, or an error code on failure
+ */
+int	init_map_grid(t_game *game, int start_index)
+{
+	int j;
+
+	if (get_map_width(game, start_index))
+		return (MAP_LINE);
+	game->map.height = get_map_height(game, start_index);
+	if (game->map.height == 0)
+		return (EMPTY_MAP);
 	game->map.map_data = ft_calloc(game->map.height + 1, sizeof(char *));
 	if (!game->map.map_data)
 		return (return_error(game, "Map allocation failed"));
+	j = -1;
 	while (++j < game->map.height)
 	{
 		game->map.map_data[j] = ft_calloc(game->map.max_width + 1,
-				sizeof(char));
+		sizeof(char));
 		if (!game->map.map_data[j])
 			return (return_error(game, "Row allocation failed"));
 		ft_memset(game->map.map_data[j], ' ', game->map.max_width);
 		game->map.map_data[j][game->map.max_width] = '\0';
 	}
-	fill_map_content(game, start_index);
+	build_map_content(game, start_index);
 	return (EXIT_SUCCESS);
-}
-
-char	**duplicate_map(t_game *game)
-{
-	char	**temp;
-	int		i;
-
-	temp = ft_calloc(game->map.height + 1, sizeof(char *));
-	if (!temp)
-		return (NULL);
-	i = 0;
-	while (i < game->map.height)
-	{
-		temp[i] = ft_strdup(game->map.map_data[i]);
-		if (!temp[i])
-			return (NULL);
-		i++;
-	}
-	temp[i] = NULL;
-	return (temp);
 }

@@ -1,5 +1,25 @@
 #include "../../include/cub3d.h"
 
+static char	**duplicate_map(t_game *game)
+{
+	char	**temp;
+	int		i;
+
+	temp = ft_calloc(game->map.height + 1, sizeof(char *));
+	if (!temp)
+		return (NULL);
+	i = 0;
+	while (i < game->map.height)
+	{
+		temp[i] = ft_strdup(game->map.map_data[i]);
+		if (!temp[i])
+			return (NULL);
+		i++;
+	}
+	temp[i] = NULL;
+	return (temp);
+}
+
 int flood_fill_in(char **map, int y, int x, int height, int width)
 {
 	if (y < 0 || y >= height || x < 0 || x >= width)
@@ -63,7 +83,7 @@ int check_outer_map(t_game *game, char **map_copy)
 	return (EXIT_SUCCESS);
 }
 
-int check_map_walls(t_game *game)
+int validate_map_layout(t_game *game)
 {
 	char	**map_copy;
 
