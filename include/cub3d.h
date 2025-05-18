@@ -57,23 +57,23 @@ typedef enum e_wall_dir
 	WEST
 }	t_wall_dir;
 
-typedef enum e_error
-{
-	ERR_FILE = 2,
-	ERR_EXT,
-	NO_EXT,
-	ERR_DUP,
-	ERR_IS_DIR,
-	ERR_READ,
-	INVALID_CHAR,
-	MULTI_PLAYER,
-	NO_PLAYER,
-	NO_FILE,
-	ERR_CONFIG,
-	ERR_RGB,
-	// NO_CONFIG,
-	MAP_LINE,
-}				t_error;
+// typedef enum e_error
+// {
+// 	ERR_FILE = 2,
+// 	ERR_EXT,
+// 	NO_EXT,
+// 	ERR_DUP,
+// 	ERR_IS_DIR,
+// 	ERR_READ,
+// 	INVALID_CHAR,
+// 	MULTI_PLAYER,
+// 	NO_PLAYER,
+// 	NO_FILE,
+// 	ERR_CONFIG,
+// 	ERR_RGB,
+// 	// NO_CONFIG,
+// 	MAP_LINE,
+// }				t_error;
 
 typedef struct s_player
 {
@@ -191,13 +191,13 @@ int	check_map_element(char *element, char **arr);
 int	create_empty_map(t_game *game, int start_index, int j);
 void	free_gnl(int fd);
 char	**duplicate_map(t_game *game);
+int	check_duplication(t_game *game, const char *identifier);
 
-void    render_graphics(t_game *game);
-void	control_player(mlx_key_data_t keydata, void *param);
-void    clean_exit(t_game *game);
+// void    render_graphics(t_game *game);
+// void	control_player(mlx_key_data_t keydata, void *param);
+// void    clean_exit(t_game *game);
 void	handle_esc(mlx_key_data_t keydata, t_game *game);
 
-int run_game(argv);
 
 #endif
 
