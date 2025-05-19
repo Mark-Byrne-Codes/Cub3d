@@ -5,33 +5,33 @@
  * @param err An error code.
  * @return 'EXIT_FAILURE' to signal an error.
  */
-int handle_map_error(int err)
+int	handle_map_error(int err)
 {
 	ft_putstr_fd("\033[1;31mError\033[0m\n", STDERR_FILENO);
 	if (err == MULTI_PLAYER)
 		ft_putstr_fd("Found multiple starting positions.\n"
-		"The map must contain exactly one player (N, S, E or W).\n",
-		STDERR_FILENO);
+			"The map must contain exactly one player (N, S, E or W).\n",
+			STDERR_FILENO);
 	else if (err == NO_PLAYER)
 		ft_putstr_fd("Missing starting position.\n"
-		"The map must contain exactly one player (N, S, E or W).\n",
-		STDERR_FILENO);
+			"The map must contain exactly one player (N, S, E or W).\n",
+			STDERR_FILENO);
 	else if (err == INVALID_CHAR)
 		ft_putstr_fd("Found invalid character.\n"
-		"Allowed characters: 0, 1, N, S, W, E and space(s).\n",
-		STDERR_FILENO);
+			"Allowed characters: 0, 1, N, S, W, E and space(s).\n",
+			STDERR_FILENO);
 	else if (err == ERR_IN_MAP)
 		ft_putstr_fd("Map must be closed/surrounded by walls.\n",
-		STDERR_FILENO);
+			STDERR_FILENO);
 	else if (err == ERR_OUT_MAP)
 		ft_putstr_fd("Map must be completely surrounded by solid walls.\n",
-		STDERR_FILENO);
+			STDERR_FILENO);
 	else if (err == MAP_LINE)
 		ft_putstr_fd("Empty line(s) between map content.\n",
-		STDERR_FILENO);
+			STDERR_FILENO);
 	else if (err == EMPTY_MAP)
-			ft_putstr_fd("Missing map content.\n", STDERR_FILENO);
-    return (EXIT_FAILURE);
+		ft_putstr_fd("Missing map content.\n", STDERR_FILENO);
+	return (EXIT_FAILURE);
 }
 
 /**
@@ -46,7 +46,7 @@ int	handle_config_error(char *line, int err, char *element)
 	ft_putstr_fd("\033[1;31mError\033[0m\n", STDERR_FILENO);
 	if (err == ERR_EXT)
 		ft_putstr_fd("Invalid texture format: Expected .png: ",
-			STDERR_FILENO); 
+			STDERR_FILENO);
 	if (err == ERR_FILE)
 		ft_putstr_fd("Cannot open file: ", STDERR_FILENO);
 	if (err == ERR_READ)
@@ -57,7 +57,7 @@ int	handle_config_error(char *line, int err, char *element)
 	{
 		if (err == ERR_RGB)
 			ft_putstr_fd("Invalid color value(s): ",
-			STDERR_FILENO);
+				STDERR_FILENO);
 		else if (err == ERR_DUP)
 			ft_putstr_fd("Found duplicate element definition: ", 2);
 		else if (err == ERR_IS_DIR)
@@ -75,7 +75,7 @@ int	return_error(t_game *game, char *msg)
 	if (msg)
 	{
 		ft_putstr_fd("\033[1;31mError\033[0m\n",
-		STDERR_FILENO);
+			STDERR_FILENO);
 		ft_putendl_fd(msg, STDERR_FILENO);
 	}
 	if (game)

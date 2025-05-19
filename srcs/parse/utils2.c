@@ -47,7 +47,8 @@ char	**trim_and_split(char *map_line)
 		return (free_grid(line), NULL);
 	return (line);
 }
-void set_color(t_game *game, t_color rgb, char c)
+
+void	set_color(t_game *game, t_color rgb, char c)
 {
 	if (c == 'F')
 	{
@@ -60,10 +61,11 @@ void set_color(t_game *game, t_color rgb, char c)
 		game->map.ceiling_set = true;
 	}
 }
-int 	ft_comma(char *str)
+
+int	ft_comma(char *str)
 {
-	int i;
-	int comma;
+	int	i;
+	int	comma;
 
 	i = -1;
 	comma = 0;
@@ -75,4 +77,24 @@ int 	ft_comma(char *str)
 	if (comma > 2)
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
+}
+
+char	**duplicate_map(t_game *game)
+{
+	char	**temp;
+	int		i;
+
+	temp = ft_calloc(game->map.height + 1, sizeof(char *));
+	if (!temp)
+		return (NULL);
+	i = 0;
+	while (i < game->map.height)
+	{
+		temp[i] = ft_strdup(game->map.map_data[i]);
+		if (!temp[i])
+			return (NULL);
+		i++;
+	}
+	temp[i] = NULL;
+	return (temp);
 }

@@ -183,6 +183,7 @@ void			free_grid(char **split);
 int				assign_rgb(char *str);
 void			free_map(t_game *game);
 int 			ft_comma(char *str);
+char			**duplicate_map(t_game *game);
 int				handle_map_error(int err);
 char			**trim_and_split(char *map_line);;
 int				return_error(t_game *game, char *msg);

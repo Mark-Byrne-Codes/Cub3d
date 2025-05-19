@@ -9,8 +9,8 @@
  */
 int	get_player_position(t_game *game, int i)
 {
-	int j;
-	int		found;
+	int	j;
+	int	found;
 
 	found = 0;
 	while (game->map.map_data[++i])
@@ -35,6 +35,7 @@ int	get_player_position(t_game *game, int i)
 		return (NO_PLAYER);
 	return (EXIT_SUCCESS);
 }
+
 static int	get_map_height(t_game *game, int i)
 {
 	int	height;
@@ -47,7 +48,6 @@ static int	get_map_height(t_game *game, int i)
 	}
 	return (height);
 }
-
 
 static void	build_map_content(t_game *game, int start_index)
 {
@@ -65,7 +65,8 @@ static void	build_map_content(t_game *game, int start_index)
 		i++;
 	}
 }
-static int get_map_width(t_game *game, int start_index)
+
+static int	get_map_width(t_game *game, int start_index)
 {
 	int		i;
 	char	*temp;
@@ -95,7 +96,7 @@ static int get_map_width(t_game *game, int start_index)
  */
 int	init_map_grid(t_game *game, int start_index)
 {
-	int j;
+	int	j;
 
 	if (get_map_width(game, start_index))
 		return (MAP_LINE);
@@ -109,7 +110,7 @@ int	init_map_grid(t_game *game, int start_index)
 	while (++j < game->map.height)
 	{
 		game->map.map_data[j] = ft_calloc(game->map.max_width + 1,
-		sizeof(char));
+				sizeof(char));
 		if (!game->map.map_data[j])
 			return (return_error(game, "Row allocation failed"));
 		ft_memset(game->map.map_data[j], ' ', game->map.max_width);

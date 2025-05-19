@@ -1,100 +1,131 @@
 #include "../../include/cub3d.h"
 
-static char	**duplicate_map(t_game *game)
+int	flood_fill_in(char **map, int y, int x, t_game *game)
 {
-	char	**temp;
-	int		i;
-
-	temp = ft_calloc(game->map.height + 1, sizeof(char *));
-	if (!temp)
-		return (NULL);
-	i = 0;
-	while (i < game->map.height)
-	{
-		temp[i] = ft_strdup(game->map.map_data[i]);
-		if (!temp[i])
-			return (NULL);
-		i++;
-	}
-	temp[i] = NULL;
-	return (temp);
-}
-
-int flood_fill_in(char **map, int y, int x, int height, int width)
-{
-	if (y < 0 || y >= height || x < 0 || x >= width)
-		return (0); // Out of bounds = invalid map (leak)
-	if (map[y][x] == '1' || map[y][x] == 'V') // 'F' = already filled
+	if (y < 0 || y >= game->map.height || x < 0
+		|| x >= game->map.max_width)
+		return (0);
+	if (map[y][x] == '1' || map[y][x] == 'V')
 		return (1);
-	if (map[y][x] == ' ') // space = invalid area
+	if (map[y][x] == ' ')
 		return (0);
 	map[y][x] = 'V';
-	if (!flood_fill_in(map, y + 1, x, height, width)
-		|| !flood_fill_in(map, y - 1, x, height, width)
-		|| !flood_fill_in(map, y, x + 1, height, width)
-		|| !flood_fill_in(map, y, x - 1, height, width))
+	if (!flood_fill_in(map, y + 1, x, game)
+		|| !flood_fill_in(map, y - 1, x, game)
+		|| !flood_fill_in(map, y, x + 1, game)
+		|| !flood_fill_in(map, y, x - 1, game))
 		return (0);
 	return (1);
 }
 
-int flood_fill_out(char **map, int y, int x, int height, int width)
+int	flood_fill_out(char **map, int y, int x, t_game *game)
 {
-	if (y < 0 || y >= height || x < 0 || x >= width)
-		return (0); // Out of bounds
-
+	if (y < 0 || y >= game->map.height || x < 0
+		|| x >= game->map.max_width)
+		return (0);
 	if (map[y][x] == '1' || map[y][x] == 'V' || map[y][x] == ' ')
-		return (1); // Wall, already visited, or space = safe/ignored
-
+		return (1);
 	if (map[y][x] == '0' || ft_strchr("NSEW", map[y][x]))
-		return (0); // Leak — reachable from outside
-
-	map[y][x] = 'V'; // Mark as visited
-	if (!flood_fill_out(map, y + 1, x, height, width)
-		|| !flood_fill_out(map, y - 1, x, height, width)
-		|| !flood_fill_out(map, y, x + 1, height, width)
-		|| !flood_fill_out(map, y, x - 1, height, width))
 		return (0);
-
+	map[y][x] = 'V';
+	if (!flood_fill_out(map, y + 1, x, game)
+		|| !flood_fill_out(map, y - 1, x, game)
+		|| !flood_fill_out(map, y, x + 1, game)
+		|| !flood_fill_out(map, y, x - 1, game))
+		return (0);
 	return (1);
 }
 
-int check_outer_map(t_game *game, char **map_copy)
+/**
+ * Checks the outer bounderies of the map to detect
+ * potential leaks. Performs a flood-fill starting from the outer edges
+ * (top row, bottom row, left column, right column) that ensure no
+ * accessible tiles ('0' or player start positions) are reachable from
+ * outside the enclosed area of the map.
+ * @param game Game state struct that holds map data.
+ * @param map_copy A copied version of the map. 
+ * @return returns 'EXIT_FAILURE' if runs into walkable or invalid space,
+ * Otherwise returns 'EXIT_SUCCESS'.
+ */
+int	check_outer_map(t_game *game, char **map_copy)
 {
-	int		i;
-	
+	int	i;
+
 	i = 0;
-	while (i < game->map.max_width)  // Top and bottom rows
+	while (i < game->map.max_width)
 	{
-		if (!flood_fill_out(map_copy, 0, i, game->map.height,game->map.max_width)
-			|| !flood_fill_out(map_copy, game->map.height - 1, i, game->map.height,
-			game->map.max_width))
+		if (!flood_fill_out(map_copy, 0, i, game)
+			|| !flood_fill_out(map_copy, game->map.height - 1, i, game))
 			return (EXIT_FAILURE);
 		i++;
 	}
 	i = 0;
-	while (i < game->map.height) // Left and right columns
+	while (i < game->map.height)
 	{
-		if (!flood_fill_out(map_copy, i, 0, game->map.height, game->map.max_width)
-			|| !flood_fill_out(map_copy, i, game->map.max_width - 1, game->map.height,
-			game->map.max_width))
+		if (!flood_fill_out(map_copy, i, 0, game)
+			|| !flood_fill_out(map_copy, i, game->map.max_width - 1, game))
 			return (EXIT_FAILURE);
 		i++;
 	}
 	return (EXIT_SUCCESS);
 }
 
-int validate_map_layout(t_game *game)
+/**
+ * Checks wether all'0' and player starting position in the map are
+ * properly enclosed.
+ * @param map A 2D grid of characters (copied version).
+ * @param height Numbers of rows in the map. 
+ * @param width Numbers of columns in thr map.
+ * @return returns 0 if a '0' character or player tile touches the edge
+ * of the map or is next to a space, returns 1 If everything is safely
+ * enclosed.
+ */
+int	validate_zero_neighbors(char **map, int height, int width)
+{
+	int	y;
+	int	x;
+
+	y = -1;
+	while (++y < height)
+	{
+		x = -1;
+		while (++x < width)
+		{
+			if (map[y][x] == '0' || ft_strchr("NSEW", map[y][x]))
+			{
+				if (y == 0 || y == height - 1 || x == 0 || x == width - 1)
+					return (0);
+				if (map[y - 1][x] == ' ' || map[y + 1][x] == ' ' ||
+					map[y][x - 1] == ' ' || map[y][x + 1] == ' ')
+					return (0);
+			}
+		}
+	}
+	return (1);
+}
+
+/**
+ * Validates the map layout by performing flood-fill
+ * algorithm that checks the validity of paths and the 
+ * enclosure of the map.
+ * @param game Game state struct that holds map data.
+ * @return If any of these checks fail, it returns an
+ * error code. Otherwise, returns EXIT_SUCCESS.
+ */
+int	validate_map_layout(t_game *game)
 {
 	char	**map_copy;
 
 	map_copy = duplicate_map(game);
 	if (!map_copy)
 		return (return_error(game, "Failed to copy map"));
-
-	if (!flood_fill_in(map_copy, game->map.player_y, game->map.player_x,
-		game->map.height, game->map.max_width))
+	if (!flood_fill_in(map_copy, game->map.player_y,
+			game->map.player_x, game))
 		return (free_grid(map_copy), ERR_IN_MAP);
 	if (check_outer_map(game, map_copy))
+		return (free_grid(map_copy), ERR_OUT_MAP);
+	if (!validate_zero_neighbors(map_copy, game->map.height,
+			game->map.max_width))
 		return (free_grid(map_copy), ERR_OUT_MAP);
 	free_grid(map_copy);
 	printf("\033[1;32mMap enclosure validation successful!\033[0m\n");
