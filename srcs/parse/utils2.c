@@ -47,3 +47,32 @@ char	**trim_and_split(char *map_line)
 		return (free_grid(line), NULL);
 	return (line);
 }
+void set_color(t_game *game, t_color rgb, char c)
+{
+	if (c == 'F')
+	{
+		game->graphics.floor_color = rgb;
+		game->map.floor_set = true;
+	}
+	else
+	{
+		game->graphics.ceiling_color = rgb;
+		game->map.ceiling_set = true;
+	}
+}
+int 	ft_comma(char *str)
+{
+	int i;
+	int comma;
+
+	i = -1;
+	comma = 0;
+	while (str[++i] != '\0')
+	{
+		if (str[i] == ',')
+			comma++;
+	}
+	if (comma > 2)
+		return (EXIT_FAILURE);
+	return (EXIT_SUCCESS);
+}

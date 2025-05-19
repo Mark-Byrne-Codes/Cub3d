@@ -55,7 +55,7 @@ static int	handle_config(t_game *game, char **line, int *count)
 	if (result != EXIT_SUCCESS)
 	{
 		ft_putstr_fd("\033[1;31mError\033[0m\n"
-			"Invalid map configuration..\n", 2);
+			"Invalid map configuration.\n", 2);
 		return (free_grid(line), -1);
 	}
 	if (assign_element(game, line[0], line[1], line))

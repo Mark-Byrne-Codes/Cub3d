@@ -72,6 +72,8 @@ static int	check_color(t_game *game, char *color, char c)
 
 	if (!color)
 		return (EXIT_FAILURE);
+	if (ft_comma(color))
+		return (ERR_RGB);
 	clr = ft_split(color, ',');
 	if (!clr || !clr[0] || !clr[1] || !clr[2])
 		return (free_grid(clr), ERR_RGB);
@@ -80,16 +82,7 @@ static int	check_color(t_game *game, char *color, char c)
 	rgb.b = assign_rgb(clr[2]);
 	if (rgb.r == -1 || rgb.g == -1 || rgb.b == -1)
 		return (free_grid(clr), ERR_RGB);
-	if (c == 'F')
-	{
-		game->graphics.floor_color = rgb;
-		game->map.floor_set = true;
-	}
-	else
-	{
-		game->graphics.ceiling_color = rgb;
-		game->map.ceiling_set = true;
-	}
+	set_color(game, rgb, c);
 	free_grid(clr);
 	return (EXIT_SUCCESS);
 }
