@@ -30,7 +30,7 @@ int	validate_identifier(char *id, char **arr)
 }
 
 /**
- *  * Handles configuration line in the map.
+ * Handles configuration line in the map.
  * @param game Game state structure.
  * @param line A line from the map.
  * @param count Counts the current number of valid configuration lines.
