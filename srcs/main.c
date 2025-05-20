@@ -17,7 +17,11 @@ int	main(int argc, char **argv)
 		ft_putstr_fd("Error\nFailed to allocate memory for game.\n", 2);
 		return (1);
 	}
-	map_validation(game, argv[1]);
+	if (map_validation(game, argv[1]))
+	{
+		clean_exit(game, NULL);
+		return (1);
+	}
 	if (run_game(game))
 	{
 		clean_exit(game, "Failed to run game");
