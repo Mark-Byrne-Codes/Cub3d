@@ -89,7 +89,7 @@ static int	validate_game_map(t_game *game, int start_index)
 }
 
 /**
- *  * Parses map configuration lines until the map data is encounterd.
+ * Parses map configuration lines until the map data is encounterd.
  * @param game Game state structure.
  * @return 
  * Index where map data starts, or -1 on error.
@@ -135,7 +135,7 @@ int	map_validation(t_game *game, char *map_file)
 	if (read_map(game, map_file))
 		return (EXIT_FAILURE);
 	map_start_index = parse_map_config(game);
-	if (map_start_index == -1)
+	if (map_start_index == CONFIG_ERROR)
 		return (EXIT_FAILURE);
 	if (validate_game_map(game, map_start_index))
 		return (EXIT_FAILURE);
