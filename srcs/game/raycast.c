@@ -1,9 +1,8 @@
 #include "../../include/cub3d.h"
 
-
 static void	init_ray(t_ray *ray, t_game *game, int x)
 {
-	double camera_x;
+	double	camera_x;
 
 	camera_x = 2 * x / (double)game->img->width - 1;
 	ray->dir_x = game->player.dir_x + game->player.plane_x * camera_x;
@@ -19,98 +18,78 @@ static void	init_ray(t_ray *ray, t_game *game, int x)
 	ray->hit = 0;
 }
 
-
-static void	calc_step(t_ray *ray, t_game *game)
+static void	calc_step(t_ray *r, t_game *g)
 {
-	if (ray->dir_x < 0)
+	if (r->dir_x < 0)
 	{
-		ray->step_x = -1;
-		ray->side_dist_x = (game->player.pos_x - ray->map_x) * ray->delta_dist_x;
+		r->step_x = -1;
+		r->side_dist_x = (g->player.pos_x - r->map_x) * r->delta_dist_x;
 	}
 	else
 	{
-		ray->step_x = 1;
-		ray->side_dist_x = (ray->map_x + 1.0 - game->player.pos_x)
-			* ray->delta_dist_x;
+		r->step_x = 1;
+		r->side_dist_x = (r->map_x + 1.0 - g->player.pos_x) * r->delta_dist_x;
 	}
-	if (ray->dir_y < 0)
+	if (r->dir_y < 0)
 	{
-		ray->step_y = -1;
-		ray->side_dist_y = (game->player.pos_y - ray->map_y) * ray->delta_dist_y;
+		r->step_y = -1;
+		r->side_dist_y = (g->player.pos_y - r->map_y) * r->delta_dist_y;
 	}
 	else
 	{
-		ray->step_y = 1;
-		ray->side_dist_y = (ray->map_y + 1.0 - game->player.pos_y)
-			* ray->delta_dist_y;
+		r->step_y = 1;
+		r->side_dist_y = (r->map_y + 1.0 - g->player.pos_y) * r->delta_dist_y;
 	}
 }
 
-
-
-static void perform_dda(t_ray *ray, t_game *game)
+static void	perform_dda(t_ray *ray, t_game *game)
 {
-    while (!ray->hit)
-    {
-        if (ray->side_dist_x < ray->side_dist_y)
-        {
-            ray->side_dist_x += ray->delta_dist_x;
-            ray->map_x += ray->step_x;
-            ray->side = 0;
-        }
-        else if (ray->side_dist_y <= ray->side_dist_x)
-        {
-            ray->side_dist_y += ray->delta_dist_y;
-            ray->map_y += ray->step_y;
-            ray->side = 1;
-        }
-        if (ray->map_x >= 0 && ray->map_x < game->map.width
-            && ray->map_y >= 0 && ray->map_y < game->map.height
-            && game->map.map_data[ray->map_y][ray->map_x] == '1')
-            ray->hit = 1;
-        else if (ray->map_x < 0 || ray->map_x >= game->map.width
-                 || ray->map_y < 0 || ray->map_y >= game->map.height)
-            ray->hit = 1;
-    }
+	while (!ray->hit)
+	{
+		if (ray->side_dist_x < ray->side_dist_y)
+		{
+			ray->side_dist_x += ray->delta_dist_x;
+			ray->map_x += ray->step_x;
+			ray->side = 0;
+		}
+		else
+		{
+			ray->side_dist_y += ray->delta_dist_y;
+			ray->map_y += ray->step_y;
+			ray->side = 1;
+		}
+		if (ray->map_x >= 0 && ray->map_x < game->map.max_width
+			&& ray->map_y >= 0 && ray->map_y < game->map.height
+			&& game->map.map_data[ray->map_y][ray->map_x] == '1')
+			ray->hit = 1;
+	}
 }
 
-static void	calc_projection(t_ray *ray, t_game *game)
+static void	calc_projection(t_ray *r, t_game *g)
 {
-	double	pos_x;
-	double	pos_y;
+	double	p[2];
 	int		screen_h;
 
-
-	pos_x = game->player.pos_x;
-	pos_y = game->player.pos_y;
-	screen_h = game->img->height;
-	if (ray->side == 0)
-		ray->perp_wall_dist = (ray->map_x - pos_x
-				+ (1 - ray->step_x) / 2.0) / ray->dir_x;
+	p[0] = g->player.pos_x;
+	p[1] = g->player.pos_y;
+	screen_h = g->img->height;
+	if (r->side == 0)
+		r->perp_wall_dist = (r->map_x - p[0] + (1 - r->step_x) / 2) / r->dir_x;
 	else
-		ray->perp_wall_dist = (ray->map_y - pos_y
-				+ (1 - ray->step_y) / 2.0) / ray->dir_y;
-	if (ray->perp_wall_dist <= 0.001)
-		ray->perp_wall_dist = 0.001;
-	ray->line_height = (int)(screen_h / ray->perp_wall_dist);
-	if (ray->line_height > HEIGHT * 10)
-		ray->line_height = HEIGHT * 10;
-	ray->draw_start = -ray->line_height / 2 + screen_h / 2;
-	if (ray->draw_start < 0)
-		ray->draw_start = 0;
-	ray->draw_end = ray->line_height / 2 + screen_h / 2;
-	if (ray->draw_end >= screen_h)
-		ray->draw_end = screen_h - 1;
+		r->perp_wall_dist = (r->map_y - p[1] + (1 - r->step_y) / 2) / r->dir_y;
+	if (r->perp_wall_dist <= 0.001)
+		r->perp_wall_dist = 0.001;
+	r->line_height = (int)(screen_h / r->perp_wall_dist);
+	if (r->line_height > HEIGHT * 10)
+		r->line_height = HEIGHT * 10;
+	r->draw_start = -r->line_height / 2 + screen_h / 2;
+	if (r->draw_start < 0)
+		r->draw_start = 0;
+	r->draw_end = r->line_height / 2 + screen_h / 2;
+	if (r->draw_end >= screen_h)
+		r->draw_end = screen_h - 1;
 }
 
-
-
-/**
- * Main raycasting loop for 3D projection
- * @param game Contains all game state and rendering context
- * @note For each screen column: casts ray, calculates wall hit,
- *       determines texture position, and draws vertical stripe
- */
 void	raycast(t_game *game)
 {
 	int			x;

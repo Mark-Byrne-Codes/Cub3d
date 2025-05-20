@@ -1,6 +1,5 @@
 #include "../../include/cub3d.h"
 
-
 int	calculate_tex_x(t_ray *ray, mlx_image_t *tex, t_player *p)
 {
 	double	wall_x;
@@ -12,7 +11,7 @@ int	calculate_tex_x(t_ray *ray, mlx_image_t *tex, t_player *p)
 		wall_x = p->pos_x + ray->perp_wall_dist * ray->dir_x;
 	wall_x -= floor(wall_x);
 	ray->tex_x = (int)(wall_x * tex->width);
-	mirrored = (ray->side == 0 && ray->dir_x < 0) 
+	mirrored = (ray->side == 0 && ray->dir_x < 0)
 		|| (ray->side == 1 && ray->dir_y < 0);
 	if (mirrored)
 		ray->tex_x = tex->width - ray->tex_x - 1;
@@ -52,11 +51,9 @@ void	draw_vertical_line(t_game *g, int x, t_ray *ray, mlx_image_t *tex)
 		else
 		{
 			mlx_put_pixel(g->img, x, y, get_pixel_color(tex, ray->tex_x,
-				(int)ray->tex_pos & (tex->height - 1)));
+					(int)ray->tex_pos & (tex->height - 1)));
 			ray->tex_pos += ray->step;
 		}
-        y++;
+		y++;
 	}
 }
-
-

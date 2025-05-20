@@ -1,23 +1,12 @@
 #include "../../include/cub3d.h"
 
-uint32_t create_rgba(t_color color)
+uint32_t	create_rgba(t_color color)
 {
-    return ((uint32_t)color.r << 24) |
-           ((uint32_t)color.g << 16) |
-           ((uint32_t)color.b << 8) |
-           0xFF;
+	return (((uint32_t)color.r << 24) | ((uint32_t)color.g << 16)
+		| ((uint32_t)color.b << 8) | 0xFF);
 }
 
-void	handle_esc(mlx_key_data_t keydata, t_game *game)
-{
-	if (keydata.key == MLX_KEY_ESCAPE && keydata.action == MLX_PRESS)
-	{
-		clean_exit(game, NULL);
-		exit(0);
-	}
-}
-
-int set_player_dir(t_game *game, char dir)
+int	set_player_dir(t_game *game, char dir)
 {
 	if (dir == 'N')
 	{
@@ -44,4 +33,29 @@ int set_player_dir(t_game *game, char dir)
 		game->player.plane_y = 0.66;
 	}
 	return (0);
+}
+
+void	clean_exit(t_game *game, char *msg)
+{
+	if (!game)
+		exit(0);
+	free_map(game);
+	if (msg)
+		ft_putstr_fd(msg, 2);
+	if (game->mlx)
+	{
+		if (game->img)
+			mlx_delete_image(game->mlx, game->img);
+		if (game->graphics.north)
+			mlx_delete_image(game->mlx, game->graphics.north);
+		if (game->graphics.south)
+			mlx_delete_image(game->mlx, game->graphics.south);
+		if (game->graphics.west)
+			mlx_delete_image(game->mlx, game->graphics.west);
+		if (game->graphics.east)
+			mlx_delete_image(game->mlx, game->graphics.east);
+		mlx_terminate(game->mlx);
+	}
+	free(game);
+	exit(0);
 }

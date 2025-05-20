@@ -1,4 +1,4 @@
-#include "../../include/cub3d.h"
+#include "../include/cub3d.h"
 
 
 int	main(int argc, char **argv)
@@ -18,21 +18,11 @@ int	main(int argc, char **argv)
 		return (1);
 	}
 	map_validation(game, argv[1]);
-// 		printf("\n\033[1;33m########## main ###############\033[0m\n\n");
-// 	printf("NO: %s\nSO: %s\nWE: %s\nEA: %s\n", 
-// 		game->map.north_texture, game->map.south_texture,
-// 		game->map.west_texture, game->map.east_texture);
-// 	printf("C: %d, %d, %d\n", game->graphics.ceiling_color.r, 
-// 		game->graphics.ceiling_color.g, game->graphics.ceiling_color.b);
-// 	printf("F: %d, %d, %d\n", game->graphics.floor_color.r, 
-// 		game->graphics.floor_color.g, game->graphics.floor_color.b);
-// 	printf("Player start direction: %c\n", game->map.start_dir);
-// 	printf("Player found at position: [%d][%d]\n", game->map.player_x, game->map.player_y);
-//   printf("max width: %d\n", game->map.max_width);
-	// if (run_game(game))
-		// clean_exit(game, "Error\nFailed to run game.\n");
-	// clean_exit(game, NULL);
-	free_map(game);
-	free(game);
+	if (run_game(game))
+	{
+		clean_exit(game, "Failed to run game");
+		return (1);
+	}		
+	clean_exit(game, NULL);
 	return (0);
 }

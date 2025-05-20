@@ -25,9 +25,6 @@
 #  define O_DIRECTORY 0200000
 # endif
 
-# ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 1024
-# endif
 
 typedef struct s_ray
 {
@@ -50,34 +47,7 @@ typedef struct s_ray
 	int			tex_x;
 	double		tex_pos;
 	double		step;
-	// uint32_t color;
 }				t_ray;
-
-typedef enum e_wall_dir
-{
-	NORTH,
-	SOUTH,
-	EAST,
-	WEST
-}				t_wall_dir;
-
-// typedef enum e_error
-// {
-// 	ERR_FILE = 2,
-// 	ERR_EXT,
-// 	NO_EXT,
-// 	ERR_DUP,
-// 	ERR_IS_DIR,
-// 	ERR_READ,
-// 	INVALID_CHAR,
-// 	MULTI_PLAYER,
-// 	NO_PLAYER,
-// 	NO_FILE,
-// 	ERR_CONFIG,
-// 	ERR_RGB,
-// 	// NO_CONFIG,
-// 	MAP_LINE,
-// }				t_error;
 
 typedef struct s_player
 {
@@ -162,20 +132,14 @@ int				run_game(t_game *game);
 void			render_graphics(void *param);
 void			control_player(mlx_key_data_t keydata, void *param);
 void			clean_exit(t_game *game, char *msg);
-void			handle_esc(mlx_key_data_t keydata, t_game *game);
 void			raycast(t_game *game);
-void			render_minimap(t_game *game);
-int				load_textures(t_game *game);
 mlx_image_t		*select_texture(t_game *game, t_ray *ray);
 int				calculate_tex_x(t_ray *ray, mlx_image_t *tex, t_player *player);
 void			draw_vertical_line(t_game *game, int x, t_ray *ray,
 					mlx_image_t *tex);
+mlx_image_t		*load_image(t_game *game, const char *path);
 uint32_t		create_rgba(t_color color);
 int				set_player_dir(t_game *game, char dir);
-void			handle_esc(mlx_key_data_t keydata, t_game *game);
-// void	render_graphics(t_game *game);
-// void	control_player(mlx_key_data_t keydata, void *param);
-// void	clean_exit(t_game *game);
 
 
 void			free_gnl(int fd);

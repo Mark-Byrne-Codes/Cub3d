@@ -25,19 +25,12 @@ static int	init_mlx(t_game *game)
 	return (0);
 }
 
-int	init_player(t_game *game)
+int	init_game(t_game *game)
 {
 	game->player.dir_x = 0;
 	game->player.dir_y = 0;
 	game->player.plane_x = 0;
 	game->player.plane_y = 0;
-	return (0);
-}
-
-int	init_game(t_game *game)
-{
-	if (init_player(game))
-		return (1);
 	set_player_dir(game, game->map.start_dir);
 	if (init_mlx(game))
 		return (1);
@@ -48,7 +41,9 @@ int	init_game(t_game *game)
 		ft_putstr_fd("Error\nFailed to put image to window\n", 2);
 		return (1);
 	}
-	if (load_textures(game))
-		return (1);
+	game->graphics.north = load_image(game, game->map.north_texture);
+	game->graphics.south = load_image(game, game->map.south_texture);
+	game->graphics.east = load_image(game, game->map.east_texture);
+	game->graphics.west = load_image(game, game->map.west_texture);
 	return (0);
 }
