@@ -1,5 +1,5 @@
 NAME	:= cub3d
-CFLAGS	:= -Wextra -Wall -Werror
+CFLAGS	:= -Wextra -Wall -Werror -g
 CC = cc
 LIBMLX	:= ./MLX42
 LIBFT = libft/libft.a
@@ -8,20 +8,13 @@ HEADERS	:= -I $(LIBMLX)/include
 LIBS    := $(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm
 
 SRCS	:= srcs/main.c \
-			srcs/utils.c \
-			srcs/game/run_game.c \
-			srcs/game/init.c \
-			srcs/game/game_utils.c \
-			srcs/game/raycast_utils.c \
-			srcs/game/render.c \
-			srcs/game/raycast.c \
-			srcs/game/minimap.c \
 			srcs/parse/parsing.c \
-      srcs/parse/flood_fill.c\
-      srcs/parse/parse_error.c \
-      srcs/parse/init_map.c \
-      srcs/parse/utils.c\
-      srcs/parse/validate_map.c\
+			srcs/parse/flood_fill.c\
+			srcs/parse/parse_error.c \
+			srcs/parse/init_map.c \
+			srcs/parse/utils1.c\
+			srcs/parse/utils2.c\
+			srcs/parse/validate_map.c\
    
 
 OBJS	:= ${SRCS:.c=.o}

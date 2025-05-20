@@ -1,137 +1,143 @@
 #include "../../include/cub3d.h"
 
-int	check_map_element(char *element, char **arr)
+/**
+ * Validates the identifier in the map configuration line.
+ * @param id The element identifier.
+ * @param arr A line contains the element and its value.
+ * @return 'MAP_START' if the line contains map data,
+ * 'EXIT_FAILURE' if there's an invalid identifier, or
+ * 'EXIR_SUCCESS' if the identifier is valid and well-formed.
+ */
+int	validate_identifier(char *id, char **arr)
 {
-	if (ft_strcmp(element, "NO") != 0 && ft_strcmp(element, "SO") != 0
-		&& ft_strcmp(element, "WE") != 0 && ft_strcmp(element, "EA") != 0
-		&& ft_strcmp(element, "F") != 0 && ft_strcmp(element, "C") != 0)
+	if (ft_strcmp(id, "NO") != 0
+		&&ft_strcmp(id, "F") != 0
+		&& ft_strcmp(id, "C") != 0
+		&& ft_strcmp(id, "SO") != 0
+		&& ft_strcmp(id, "WE") != 0
+		&& ft_strcmp(id, "EA") != 0)
 	{
-		if (element[0] == '1' || element[0] == '0' || element[0] == ' '
-			|| element[0] == 'N' || element[0] == 'S' || element[0] == 'W'
-			|| element[0] == 'E')
-			return (MAP_LINE); // Special code for map lines
-		return (ERR_CONFIG);
-	}
-	if (!arr[1])
-		return (NO_EXT);
-	if (arr[2])
-		return (ERR_CONFIG);
-	return (EXIT_SUCCESS);
-}
-
-void	configuration_format(int err)
-{
-	(void)err;
-	ft_putstr_fd("\033[1;33mRequired configuration format:\033[0m\n",
-		STDERR_FILENO);
-	ft_putstr_fd("NO path/to/north_texture.png\n", STDERR_FILENO);
-	ft_putstr_fd("SO path/to/south_texture.png\n", STDERR_FILENO);
-	ft_putstr_fd("WE path/to/west_texture.png\n", STDERR_FILENO);
-	ft_putstr_fd("EA path/to/east_texture.png\n", STDERR_FILENO);
-	ft_putstr_fd("F  0,0,0  (RGB values 0-255)\n", STDERR_FILENO);
-	ft_putstr_fd("C  0,0,0  (RGB values 0-255)\n", STDERR_FILENO);
-}
-
-
-int	check_required_config(t_game *game)
-
-{
-	if (!game->map.north_texture || !game->map.south_texture
-		|| !game->map.west_texture || !game->map.east_texture
-		|| !game->map.ceiling_set || !game->map.floor_set)
-	{
-		configuration_format(0);
+		if (id[0] == '1' || id[0] == '0'
+			|| id[0] == ' ' || id[0] == 'N'
+			|| id[0] == 'S' || id[0] == 'W'
+			|| id[0] == 'E')
+			return (MAP_LINE);
 		return (EXIT_FAILURE);
 	}
+	if (!arr[1] || arr[2])
+		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
 
-
-int	find_player(t_game *game)
+/**
+ * Handles configuration line in the map.
+ * @param game Game state structure.
+ * @param line A line from the map.
+ * @param count Counts the current number of valid configuration lines.
+ * @return 'MAP_START' if the line contains map data
+ * and all line configurations are set,
+ * 'CONFIG_ERROR' if there's an invalid configuration, or
+ * 'EXIT_SUCCESS if not all configurations are set yet.
+ */
+static int	handle_config(t_game *game, char **line, int *count)
 {
-	int		i;
-	int		j;
-	char	c;
-	int		found;
+	int	result;
 
-	// printf("\n\033[1;33m########## Player Validation ###############\033[0m\n");
-	i = -1;
-	found = 0;
-	while (game->map.map_data[++i])
+	result = validate_identifier(line[0], line);
+	if (result == MAP_LINE)
 	{
-		j = -1;
-		while (game->map.map_data[i][++j])
-		{
-			c = game->map.map_data[i][j];
-			if (!ft_strchr("01NSEW ", c))
-				return (INVALID_CHAR);
-			if (ft_strchr("NSEW", c))
-			{
-				found++;
-				game->map.start_dir = c;
-				game->map.player_x = j;
-				game->map.player_y = i;
-				if (found > 1)
-					return (MULTI_PLAYER);
-			}
-		}
+		if (*count == CONFIG_COUNT)
+			return (free_grid(line), MAP_START);
+		ft_putstr_fd("\033[1;31mError\033[0m\n"
+			"Invalid map configuration.\n", 2);
+		return (free_grid(line), CONFIG_ERROR);
 	}
-	if (found == 0)
-		return (NO_PLAYER);
-	// printf("\033[1;32mPlayer validation successful!\033[0m\n");
+	if (result != EXIT_SUCCESS)
+	{
+		ft_putstr_fd("\033[1;31mError\033[0m\n"
+			"Invalid map configuration.\n", 2);
+		return (free_grid(line), -1);
+	}
+	if (assign_element(game, line[0], line[1], line))
+		return (free_grid(line), CONFIG_ERROR);
+	(*count)++;
+	free_grid(line);
 	return (EXIT_SUCCESS);
 }
 
-int	validate_map_data(t_game *game, int i)
+/**
+ * Validates the game map
+ * @param Game state struct.
+ * @param start_index The index where the map data starts.
+ * @return 'EXIT_SUCCESS' if validation passed, or
+ * 'EXIT_FAILURE if validation failed.
+ */
+static int	validate_game_map(t_game *game, int start_index)
 {
 	int	err;
 
-	err = create_empty_map(game, i, -1);
+	err = init_map_grid(game, start_index);
 	if (err)
 		return (handle_map_error(err));
-	err = find_player(game);
+	err = get_player_position(game, -1);
 	if (err)
 		return (handle_map_error(err));
-	err = check_map_walls(game);
+	err = validate_map_layout(game);
 	if (err)
 		return (handle_map_error(err));
 	return (EXIT_SUCCESS);
 }
-int	process_configuration(t_game *game, int i)
+
+/**
+ *  * Parses map configuration lines until the map data is encounterd.
+ * @param game Game state structure.
+ * @return 
+ * Index where map data starts, or -1 on error.
+ */
+static int	parse_map_config(t_game *game)
 {
 	char	**line;
-  
-	while (game->map.map_grid[++i] != NULL)
+	int		count;
+	int		status;
+	int		current_index;
+
+	count = 0;
+	current_index = 0;
+	while (game->map.map_grid[current_index] != NULL)
 	{
-		line = trim_and_split(game->map.map_grid[i]);
+		line = trim_and_split(game->map.map_grid[current_index]);
 		if (!line)
 		{
-			if (errno == ENOMEM)
-				return (EXIT_FAILURE);
-			i++;
+			current_index++;
 			continue ;
-
 		}
-		if (check_map_element(line[0], line) == MAP_LINE)
-		{
-			free_grid(line);
+		status = handle_config(game, line, &count);
+		if (status == MAP_START)
 			break ;
-		}
-		if (load_config_element(game, line[0], line[1], line))
-			return (free_grid(line), EXIT_FAILURE);
-
+		if (status == CONFIG_ERROR)
+			return (-1);
+		current_index++;
 	}
-	if (validate_map_data(game, i - 1))
-		return (EXIT_FAILURE);
-	return (EXIT_SUCCESS);
+	return (current_index);
 }
 
-int	validate_map_configuration(t_game *game)
+/**
+ * Validates the map and its congiguration.
+ * @param game Game state struct.
+ * @param map_file The path to the map file.
+ * @return 'EXIT_SUCCESS' if validation passed, or
+ * 'EXIT_FAILURE if validation failed.
+ */
+int	map_validation(t_game *game, char *map_file)
 {
-	if (process_configuration(game, -1) == MAP_LINE)
+	int	map_start_index;
+
+	if (read_map(game, map_file))
 		return (EXIT_FAILURE);
-	// if (check_required_config(game))
-	// 	return (EXIT_FAILURE);
+	map_start_index = parse_map_config(game);
+	if (map_start_index == -1)
+		return (EXIT_FAILURE);
+	if (validate_game_map(game, map_start_index))
+		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
-

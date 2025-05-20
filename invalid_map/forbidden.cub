@@ -1,0 +1,17 @@
+NO /home/hahamdan/github_project/cub3d/assets/north.png
+SO /home/hahamdan/github_project/cub3d/assets/south.png
+WE /home/hahamdan/github_project/cub3d/assets/west.png
+EA /home/hahamdan/github_project/cub3d/assets/east.png
+
+
+F 18,53,25
+C 153,204,255
+
+111111111111
+1         11
+1          1
+111111111111
+10S000000001
+111111111111
+11         1
+111111111111
