@@ -1,9 +1,9 @@
-NO /home/mbyrne/Cub3d/assets/north.png
+NO /home/mbyrne/Cub3d/assets/ground.png
 SO /home/mbyrne/Cub3d/assets/south.png
 WE /home/mbyrne/Cub3d/assets/west.png
-EA /home/mbyrne/Cub3d/assets/east.png
-F 184,113,39
-C 51,198,227
+EA /home/mbyrne/Cub3d/assets/ocean.png
+F 0,0,0
+C 255,255,255
 
 1111111111111111111111111
 110000000011000000011111
