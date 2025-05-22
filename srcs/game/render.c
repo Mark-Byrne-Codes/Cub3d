@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   render.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mbyrne <mbyrne@student.hive.fi>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/22 08:49:27 by mbyrne            #+#    #+#             */
+/*   Updated: 2025/05/22 11:50:44 by mbyrne           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../include/cub3d.h"
 
 mlx_image_t	*select_texture(t_game *game, t_ray *ray)
@@ -25,11 +37,11 @@ mlx_image_t	*load_image(t_game *game, const char *path)
 
 	texture = mlx_load_png(path);
 	if (!texture)
-		clean_exit(game, "Failed to load texture");
+		clean_exit(game, "Failed to load texture\n");
 	image = mlx_texture_to_image(game->mlx, texture);
 	mlx_delete_texture(texture);
 	if (!image)
-		clean_exit(game, "Failed to convert texture to image");
+		clean_exit(game, "Failed to convert texture to image\n");
 	return (image);
 }
 
@@ -38,6 +50,6 @@ void	render_graphics(void *param)
 	t_game	*game;
 
 	game = (t_game *)param;
-	memset(game->img->pixels, 0, WIDTH * HEIGHT * sizeof(int32_t));
+	ft_memset(game->img->pixels, 0, WIDTH * HEIGHT * sizeof(int32_t));
 	raycast(game);
 }

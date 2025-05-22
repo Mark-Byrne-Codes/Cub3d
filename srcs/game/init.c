@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mbyrne <mbyrne@student.hive.fi>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/22 08:49:17 by mbyrne            #+#    #+#             */
+/*   Updated: 2025/05/22 08:49:18 by mbyrne           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../include/cub3d.h"
 
 static int	init_mlx(t_game *game)
@@ -25,12 +37,21 @@ static int	init_mlx(t_game *game)
 	return (0);
 }
 
-int	init_game(t_game *game)
+static void	init_graphics(t_game *game)
 {
 	game->player.dir_x = 0;
 	game->player.dir_y = 0;
 	game->player.plane_x = 0;
 	game->player.plane_y = 0;
+	game->graphics.north = load_image(game, game->map.north_texture);
+	game->graphics.south = load_image(game, game->map.south_texture);
+	game->graphics.east = load_image(game, game->map.east_texture);
+	game->graphics.west = load_image(game, game->map.west_texture);
+}
+
+int	init_game(t_game *game)
+{
+	init_graphics(game);
 	set_player_dir(game, game->map.start_dir);
 	if (init_mlx(game))
 		return (1);
@@ -41,9 +62,5 @@ int	init_game(t_game *game)
 		ft_putstr_fd("Error\nFailed to put image to window\n", 2);
 		return (1);
 	}
-	game->graphics.north = load_image(game, game->map.north_texture);
-	game->graphics.south = load_image(game, game->map.south_texture);
-	game->graphics.east = load_image(game, game->map.east_texture);
-	game->graphics.west = load_image(game, game->map.west_texture);
 	return (0);
 }
