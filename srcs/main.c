@@ -20,7 +20,7 @@ int	main(int argc, char **argv)
 		return (1);
 	}
 	if(map_validation(game, argv[1]))
-		clean_exit(game, "Invalid map");
+		clean_exit(game, NULL);
 	if (run_game(game))
 	{
 		clean_exit(game, "Failed to run game");

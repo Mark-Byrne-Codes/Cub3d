@@ -77,9 +77,9 @@ static int	check_color(t_game *game, char *color, char c)
 	clr = ft_split(color, ',');
 	if (!clr || !clr[0] || !clr[1] || !clr[2])
 		return (free_grid(clr), ERR_RGB);
-	rgb.r = assign_rgb(clr[0]);
-	rgb.g = assign_rgb(clr[1]);
-	rgb.b = assign_rgb(clr[2]);
+	rgb.r = convert_rgb(clr[0]);
+	rgb.g = convert_rgb(clr[1]);
+	rgb.b = convert_rgb(clr[2]);
 	if (rgb.r == -1 || rgb.g == -1 || rgb.b == -1)
 		return (free_grid(clr), ERR_RGB);
 	set_color(game, rgb, c);
@@ -124,22 +124,22 @@ int	assign_element(t_game *game, char *identifier, char *line, char **arr)
 
 	err = validate_identifier(identifier, arr);
 	if (err)
-		return (handle_config_error(line, err, identifier));
+		return (config_error(line, err, identifier));
 	err = check_duplication(game, identifier);
 	if (err)
-		return (handle_config_error(line, err, identifier));
+		return (config_error(line, err, identifier));
 	if (ft_strcmp(identifier, "NO") == 0 || ft_strcmp(identifier, "SO") == 0
 		|| ft_strcmp(identifier, "WE") == 0 || ft_strcmp(identifier, "EA") == 0)
 	{
 		err = check_texture(game, line, identifier);
 		if (err)
-			return (handle_config_error(line, err, identifier));
+			return (config_error(line, err, identifier));
 	}
 	if (ft_strcmp(identifier, "F") == 0 || ft_strcmp(identifier, "C") == 0)
 	{
 		err = check_color(game, line, identifier[0]);
 		if (err)
-			return (handle_config_error(line, err, identifier));
+			return (config_error(line, err, identifier));
 	}
 	return (EXIT_SUCCESS);
 }

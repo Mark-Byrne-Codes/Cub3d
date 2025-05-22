@@ -39,7 +39,7 @@ int	validate_identifier(char *id, char **arr)
  * 'CONFIG_ERROR' if there's an invalid configuration, or
  * 'EXIT_SUCCESS if not all configurations are set yet.
  */
-static int	handle_config(t_game *game, char **line, int *count)
+static int	config_handler(t_game *game, char **line, int *count)
 {
 	int	result;
 
@@ -56,7 +56,7 @@ static int	handle_config(t_game *game, char **line, int *count)
 	{
 		ft_putstr_fd("\033[1;31mError\033[0m\n"
 			"Invalid map configuration.\n", 2);
-		return (free_grid(line), -1);
+		return (free_grid(line), CONFIG_ERROR);
 	}
 	if (assign_element(game, line[0], line[1], line))
 		return (free_grid(line), CONFIG_ERROR);
@@ -78,13 +78,13 @@ static int	validate_game_map(t_game *game, int start_index)
 
 	err = init_map_grid(game, start_index);
 	if (err)
-		return (handle_map_error(err));
+		return (map_error(err));
 	err = get_player_position(game, -1);
 	if (err)
-		return (handle_map_error(err));
+		return (map_error(err));
 	err = validate_map_layout(game);
 	if (err)
-		return (handle_map_error(err));
+		return (map_error(err));
 	return (EXIT_SUCCESS);
 }
 
@@ -111,7 +111,7 @@ static int	parse_map_config(t_game *game)
 			current_index++;
 			continue ;
 		}
-		status = handle_config(game, line, &count);
+		status = config_handler(game, line, &count);
 		if (status == MAP_START)
 			break ;
 		if (status == CONFIG_ERROR)
@@ -135,7 +135,7 @@ int	map_validation(t_game *game, char *map_file)
 	if (read_map(game, map_file))
 		return (EXIT_FAILURE);
 	map_start_index = parse_map_config(game);
-	if (map_start_index == -1)
+	if (map_start_index == CONFIG_ERROR)
 		return (EXIT_FAILURE);
 	if (validate_game_map(game, map_start_index))
 		return (EXIT_FAILURE);

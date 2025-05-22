@@ -5,7 +5,7 @@
  * @param str A string contains numeric value.
  * @return The RGB value on success, or -1 if invalid.
  */
-int	assign_rgb(char *str)
+int	convert_rgb(char *str)
 {
 	int	color;
 	int	i;

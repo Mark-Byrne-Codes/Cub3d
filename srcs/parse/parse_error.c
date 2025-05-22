@@ -5,7 +5,7 @@
  * @param err An error code.
  * @return 'EXIT_FAILURE' to signal an error.
  */
-int	handle_map_error(int err)
+int	map_error(int err)
 {
 	ft_putstr_fd("\033[1;31mError\033[0m\n", STDERR_FILENO);
 	if (err == MULTI_PLAYER)
@@ -41,7 +41,7 @@ int	handle_map_error(int err)
  * @param element The name of the element involved in the error.
  * @return 'EXIT_FAILURE' to signal an error.
  */
-int	handle_config_error(char *line, int err, char *element)
+int	config_error(char *line, int err, char *element)
 {
 	ft_putstr_fd("\033[1;31mError\033[0m\n", STDERR_FILENO);
 	if (err == ERR_EXT)
