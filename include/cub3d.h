@@ -3,11 +3,10 @@
 
 # include "../libft/libft.h"
 # include "./MLX42/MLX42.h"
-# include <errno.h>
 # include <fcntl.h>
 # include <math.h>
 # include <stdio.h>
-# include <string.h>
+
 
 # define WIDTH 1920
 # define HEIGHT 1080
@@ -24,7 +23,6 @@
 # ifndef O_DIRECTORY
 #  define O_DIRECTORY 0200000
 # endif
-
 
 typedef struct s_ray
 {
@@ -78,9 +76,7 @@ typedef struct s_graphics
 
 typedef struct s_map
 {
-	int			count;
 	int			fd;
-	int			*widths;
 	int			height;
 	int			max_width;
 	char		**map_grid;
@@ -140,22 +136,20 @@ void			draw_vertical_line(t_game *game, int x, t_ray *ray,
 mlx_image_t		*load_image(t_game *game, const char *path);
 uint32_t		create_rgba(t_color color);
 int				set_player_dir(t_game *game, char dir);
-
-
 void			free_gnl(int fd);
 void			free_grid(char **split);
-int				convert_rgb(char *str);
+int				assign_rgb(char *str);
 void			free_map(t_game *game);
-int 			ft_comma(char *str);
+int				ft_comma(char *str);
 char			**duplicate_map(t_game *game);
-int				map_error(int err);
+int				handle_map_error(int err);
 char			**trim_and_split(char *map_line);;
 int				return_error(t_game *game, char *msg);
 int				read_map(t_game *game, char *argv);
 int				map_validation(t_game *game, char *map_file);
 int				get_player_position(t_game *game, int i);
-void 			set_color(t_game *game, t_color rgb, char c);
-int				config_error(char *line, int err, char *element);
+void			set_color(t_game *game, t_color rgb, char c);
+int				handle_config_error(char *line, int err, char *element);
 int				validate_identifier(char *id, char **arr);
 int				validate_map_layout(t_game *game);
 int				init_map_grid(t_game *game, int map_start_index);

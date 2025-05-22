@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: hahamdan <hahamdan@student.hive.fi>        +#+  +:+       +#+         #
+#    By: mbyrne <mbyrne@student.hive.fi>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/28 14:57:50 by mbyrne            #+#    #+#              #
-#    Updated: 2025/05/15 20:41:01 by hahamdan         ###   ########.fr        #
+#    Updated: 2025/05/22 08:48:27 by mbyrne           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,6 +43,8 @@ SRC = $(LIBFT_SRC) $(GNL_SRC) $(FT_PRINTF_SRC)
 OBJ = $(SRC:.c=.o)
 
 all: $(NAME)
+
+.SILENT:
 
 $(NAME): $(OBJ)
 	ar rcs $(NAME) $(OBJ)

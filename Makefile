@@ -1,11 +1,24 @@
-NAME	:= cub3d
-CFLAGS	:= -Wextra -Wall -Werror -g
-CC = cc
-LIBMLX	:= ./MLX42
-LIBFT = libft/libft.a
+# ================================= COLORS =================================== #
+BOLD	= \033[1m
+RED		= \033[0;31m
+GREEN	= \033[0;32m
+YELLOW	= \033[0;33m
+BLUE	= \033[0;34m
+PURPLE	= \033[0;35m
+CYAN	= \033[0;36m
+RESET	= \033[0m
 
-HEADERS	:= -I $(LIBMLX)/include
-LIBS    := $(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm
+# ================================ SETTINGS ================================== #
+NAME		= cub3D
+CC			= cc
+CFLAGS		= -Wall -Wextra -Werror
+LIBMLX		= ./MLX42
+LIBFT_DIR	= libft
+LIBFT		= $(LIBFT_DIR)/libft.a
+HEADERS		= -I $(LIBMLX)/include -I include
+LIBS		= $(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm
+
+# ================================ SOURCES =================================== #
 
 SRCS	:= srcs/main.c \
 			srcs/parse/parsing.c \
@@ -23,35 +36,52 @@ SRCS	:= srcs/main.c \
 			srcs/game/raycast.c \
    
 
-OBJS	:= ${SRCS:.c=.o}
+OBJ_DIR		= objs
+OBJS		= $(SRCS:srcs/%.c=$(OBJ_DIR)/%.o)
 
+# ================================ RULES ===================================== #
 all: libmlx $(LIBFT) $(NAME)
 
-$(LIBMLX):
-	@git clone https://github.com/codam-coding-college/MLX42.git $(LIBMLX)
+$(NAME): $(OBJS) | $(LIBFT)
+	@echo "$(CYAN)$(BOLD)🔗 Linking $(NAME)...$(RESET)"
+	@$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(LIBS) $(HEADERS) -o $(NAME)
+	@echo "$(GREEN)$(BOLD)✅ Successfully built $(NAME)!$(RESET)"
 
-libmlx: $(LIBMLX)
+libmlx: $(LIBMLX)/build/libmlx42.a
+
+$(LIBMLX)/build/libmlx42.a:
+	@echo "$(YELLOW)$(BOLD)🚀 Cloning and building MLX42...$(RESET)"
+	@if [ ! -d "$(LIBMLX)" ]; then git clone https://github.com/codam-coding-college/MLX42.git $(LIBMLX); fi
 	@cmake $(LIBMLX) -B $(LIBMLX)/build && make -C $(LIBMLX)/build -j4
-
-%.o: %.c
-	@$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS)
-
-$(NAME): $(OBJS)
-	@$(CC) $(OBJS) $(LIBFT) $(LIBS) $(HEADERS) -o $(NAME)
+	@echo "$(GREEN)$(BOLD)✔️  MLX42 ready!$(RESET)"
 
 $(LIBFT):
-	@make -C ./libft
+	@$(MAKE) -C $(LIBFT_DIR) --no-print-directory
+	@echo "$(GREEN)$(BOLD)✔️  libft ready!$(RESET)"
+
+$(OBJ_DIR)/%.o: srcs/%.c | libmlx
+	@mkdir -p $(dir $@)
+	@echo "$(BLUE)🔧 Compiling: $(PURPLE)$<$(RESET)"
+	@$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS)
+
+$(OBJ_DIR):
+	@mkdir -p $(OBJ_DIR)
+	@mkdir -p $(OBJ_DIR)/game
+	@mkdir -p $(OBJ_DIR)/parse
 
 clean:
-	@rm -rf $(OBJS)
+	@echo "$(RED)🧹 Cleaning object files...$(RESET)"
+	@rm -rf $(OBJ_DIR)
 	@rm -rf $(LIBMLX)/build
-	@make clean -C ./libft
-
+	@$(MAKE) -C $(LIBFT_DIR) clean --no-print-directory
+	@echo "$(GREEN)✔️  Object files removed!$(RESET)"
 
 fclean: clean
-	@rm -rf $(NAME)
+	@echo "$(RED)🔥 Full clean...$(RESET)"
+	@rm -f $(NAME)
 	@rm -rf $(LIBMLX)
-	@make fclean -C ./libft
+	@$(MAKE) -C $(LIBFT_DIR) fclean --no-print-directory
+	@echo "$(GREEN)✔️  Everything cleaned!$(RESET)"
 
 re: fclean all
 
