@@ -80,7 +80,7 @@ int	check_outer_map(t_game *game, char **map_copy)
  * of the map or is next to a space, returns 1 If everything is safely
  * enclosed.
  */
-int	validate_zero_neighbors(char **map, int height, int width)
+int	validate_neighbors(char **map, int height, int width)
 {
 	int	y;
 	int	x;
@@ -124,7 +124,7 @@ int	validate_map_layout(t_game *game)
 		return (free_grid(map_copy), ERR_IN_MAP);
 	if (check_outer_map(game, map_copy))
 		return (free_grid(map_copy), ERR_OUT_MAP);
-	if (!validate_zero_neighbors(map_copy, game->map.height,
+	if (!validate_neighbors(map_copy, game->map.height,
 			game->map.max_width))
 		return (free_grid(map_copy), ERR_OUT_MAP);
 	free_grid(map_copy);
