@@ -6,7 +6,7 @@
 /*   By: hahamdan <hahamdan@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 17:05:40 by hahamdan          #+#    #+#             */
-/*   Updated: 2025/05/25 17:07:07 by hahamdan         ###   ########.fr       */
+/*   Updated: 2025/05/25 17:40:02 by hahamdan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 # include "./MLX42/MLX42.h"
 # include <fcntl.h>
 # include <math.h>
-# include <stdio.h>
 
 # define WIDTH 1920
 # define HEIGHT 1080

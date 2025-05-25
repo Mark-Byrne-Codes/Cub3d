@@ -6,7 +6,7 @@
 /*   By: hahamdan <hahamdan@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 17:04:09 by hahamdan          #+#    #+#             */
-/*   Updated: 2025/05/25 17:24:09 by hahamdan         ###   ########.fr       */
+/*   Updated: 2025/05/25 17:41:42 by hahamdan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,8 @@ int	ft_comma(char *str)
 
 /**
  * @brief Creates a duplicate of the game map.
- * @param game Pointer to the game structure containing the map data to duplicate.
+ * @param game Pointer to the game structure containing the map
+ * data to duplicate.
  * @return char** On success: newly allocated copy of the map
  *                On failure: NULL (memory allocation failed)
  */
