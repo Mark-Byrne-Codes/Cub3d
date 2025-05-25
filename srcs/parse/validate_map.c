@@ -6,15 +6,15 @@
 /*   By: hahamdan <hahamdan@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 17:04:22 by hahamdan          #+#    #+#             */
-/*   Updated: 2025/05/25 17:04:26 by hahamdan         ###   ########.fr       */
+/*   Updated: 2025/05/25 17:30:40 by hahamdan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/cub3d.h"
 
 /**
- * Sets the palyer and its starting position on the map. 
- * @param game Game state struct that holds map data. 
+ * @brief Sets the palyer and its starting position on the map. 
+ * @param game Pointer to the game structure containing map information.
  * @param i The starting index to search for the player in the map.
  * @return 'EXIT_SUCCESS' if the player is successufully set, or
  * an error code if failed.
@@ -48,6 +48,13 @@ int	get_player_position(t_game *game, int i)
 	return (EXIT_SUCCESS);
 }
 
+/**
+ * @brief Calculates the height (number of lines) of the map
+ * content starting from given index.
+ * @param game Pointer to the game structure containing the map grid.
+ * @param i Starting index in map_grid from which to begin counting.
+ * @return int The number of map lines found (height).
+ */
 static int	get_map_height(t_game *game, int i)
 {
 	int	height;
@@ -61,6 +68,13 @@ static int	get_map_height(t_game *game, int i)
 	return (height);
 }
 
+/**
+ * @brief Populates the game's map data from the raw grid starting at
+ * specified index.
+ * @param game Pointer to the game structure containing both raw grid
+ * and destination map.
+ * @param start_index The index in map_grid where actual map content begins.
+ */
 static void	build_map_content(t_game *game, int start_index)
 {
 	int		i;
@@ -78,6 +92,13 @@ static void	build_map_content(t_game *game, int start_index)
 	}
 }
 
+/**
+ * @brief Calculates the maximum width of the map starting from a given index
+ * @param game Pointer to the game structure containing map data
+ * @param start_index The row index to begin checking from
+ * @return EXIT_SUCCESS on successful calculation,
+ *             EXIT_FAILURE if an empty line is encountered
+ */
 static int	get_map_width(t_game *game, int start_index)
 {
 	int		i;
@@ -98,10 +119,10 @@ static int	get_map_width(t_game *game, int start_index)
 }
 
 /**
- * initialize an empty grid for the game map.
+ * @brief initialize an empty grid for the game map.
  * Allocates memory for the map and its rows, and initializes
  * each row with spaces.
- * @param game Game state struct that holds map data.
+ * @param game Pointer to the game structure containing map information.
  * @param start_index Index where map data starts.
  * @return 'MAP_LINE' if theres empty line between map,
  * 'EXIT_SUCCESS if the map is successfully created, or an error code on failure

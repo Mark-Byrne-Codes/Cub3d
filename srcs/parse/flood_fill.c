@@ -6,7 +6,7 @@
 /*   By: hahamdan <hahamdan@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 17:02:49 by hahamdan          #+#    #+#             */
-/*   Updated: 2025/05/25 17:02:53 by hahamdan         ###   ########.fr       */
+/*   Updated: 2025/05/25 17:16:09 by hahamdan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,12 +49,12 @@ int	flood_fill_out(char **map, int y, int x, t_game *game)
 }
 
 /**
- * Checks the outer bounderies of the map to detect
+ * @brief Checks the outer bounderies of the map to detect
  * potential leaks. Performs a flood-fill starting from the outer edges
  * (top row, bottom row, left column, right column) that ensure no
  * accessible tiles ('0' or player start positions) are reachable from
  * outside the enclosed area of the map.
- * @param game Game state struct that holds map data.
+ * @param game Pointer to the game structure containing map information.
  * @param map_copy A copied version of the map. 
  * @return returns 'EXIT_FAILURE' if runs into walkable or invalid space,
  * Otherwise returns 'EXIT_SUCCESS'.
@@ -83,7 +83,7 @@ int	check_outer_map(t_game *game, char **map_copy)
 }
 
 /**
- * Checks wether all'0' and player starting position in the map are
+ * @brief Checks wether all'0' and player starting position in the map are
  * properly enclosed.
  * @param map A 2D grid of characters (copied version).
  * @param height Numbers of rows in the map. 
@@ -117,10 +117,10 @@ int	validate_neighbors(char **map, int height, int width)
 }
 
 /**
- * Validates the map layout by performing flood-fill
+ * @brief Validates the map layout by performing flood-fill
  * algorithm that checks the validity of paths and the 
  * enclosure of the map.
- * @param game Game state struct that holds map data.
+ * @param game Pointer to the game structure containing map information.
  * @return If any of these checks fail, it returns an
  * error code. Otherwise, returns EXIT_SUCCESS.
  */

@@ -6,7 +6,7 @@
 /*   By: hahamdan <hahamdan@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 17:03:22 by hahamdan          #+#    #+#             */
-/*   Updated: 2025/05/25 17:03:36 by hahamdan         ###   ########.fr       */
+/*   Updated: 2025/05/25 17:32:33 by hahamdan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,12 @@ void	free_gnl(int fd)
 	}
 }
 
+/**
+ * @brief Calculates the height (number of lines) of the map file
+ * @param game Pointer to the game structure containing map information.
+ * @param filename Path to the map file to be measured
+ * @return Number of lines in the file (map height), or -1 on error.
+ */
 static int	get_height(t_game *game, char *filename)
 {
 	char	*gnl;
@@ -66,6 +72,12 @@ static int	get_height(t_game *game, char *filename)
 	return (i);
 }
 
+/**
+ * @brief Allocates and populates the map grid from file descriptor
+ * @param game Pointer to the game structure where map will be stored
+ * @param height Expected number of lines to read (size for allocation)
+ * @return int EXIT_SUCCESS on success, EXIT_FAILURE on allocation error
+ */
 static int	allocate_map_grid(t_game *game, int height)
 {
 	int		i;
@@ -88,6 +100,13 @@ static int	allocate_map_grid(t_game *game, int height)
 	return (EXIT_SUCCESS);
 }
 
+/**
+ * @brief Reads and allocates memory for the map from a file
+ * @param game Pointer to the game structure containing map information
+ * @param argv Path to the map file to be read
+ * @return int EXIT_SUCCESS on success,
+ * EXIT_FAILURE on error (with error message set)
+ */
 int	read_map(t_game *game, char *argv)
 {
 	int	height;

@@ -6,14 +6,14 @@
 /*   By: hahamdan <hahamdan@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 17:04:09 by hahamdan          #+#    #+#             */
-/*   Updated: 2025/05/25 17:04:14 by hahamdan         ###   ########.fr       */
+/*   Updated: 2025/05/25 17:24:09 by hahamdan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/cub3d.h"
 
 /**
- * converts a string to an RGB value (0-255). 
+ * @brief converts a string to an RGB value (0-255). 
  * @param str A string contains numeric value.
  * @return The RGB value on success, or -1 if invalid.
  */
@@ -35,7 +35,7 @@ int	convert_rgb(char *str)
 }
 
 /**
- * Trims characters from the beginning and end of a string
+ * @brief Trims characters from the beginning and end of a string
  * and then splits the string into an array of substrings
  based on the delimiter that was given.
  @param map_line A line from the map.
@@ -74,6 +74,11 @@ void	set_color(t_game *game, t_color rgb, char c)
 	}
 }
 
+/**
+ * @brief Validates the number of comma (',') characters in a string.
+ * @param str The input string to check for commas.
+ * @return int EXIT_SUCCESS if 2 or fewer commas, EXIT_FAILURE if more than 2.
+ */
 int	ft_comma(char *str)
 {
 	int	i;
@@ -91,6 +96,12 @@ int	ft_comma(char *str)
 	return (EXIT_SUCCESS);
 }
 
+/**
+ * @brief Creates a duplicate of the game map.
+ * @param game Pointer to the game structure containing the map data to duplicate.
+ * @return char** On success: newly allocated copy of the map
+ *                On failure: NULL (memory allocation failed)
+ */
 char	**duplicate_map(t_game *game)
 {
 	char	**temp;

@@ -6,14 +6,14 @@
 /*   By: hahamdan <hahamdan@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 17:03:56 by hahamdan          #+#    #+#             */
-/*   Updated: 2025/05/25 17:04:00 by hahamdan         ###   ########.fr       */
+/*   Updated: 2025/05/25 17:17:12 by hahamdan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/cub3d.h"
 
 /**
- * Validates the identifier in the map configuration line.
+ * @brief Validates the identifier in the map configuration line.
  * @param id The element identifier.
  * @param arr A line contains the element and its value.
  * @return 'MAP_START' if the line contains map data,
@@ -42,8 +42,8 @@ int	validate_identifier(char *id, char **arr)
 }
 
 /**
- * Handles configuration line in the map.
- * @param game Game state structure.
+ * @brief Handles configuration line in the map.
+ * @param game Pointer to the game structure containing map information.
  * @param line A line from the map.
  * @param count Counts the current number of valid configuration lines.
  * @return 'MAP_START' if the line contains map data
@@ -78,8 +78,8 @@ static int	config_handler(t_game *game, char **line, int *count)
 }
 
 /**
- * Validates the game map
- * @param Game state struct.
+ * @brief Validates the game map
+ * @param Game Pointer to the game structure containing map information.
  * @param start_index The index where the map data starts.
  * @return 'EXIT_SUCCESS' if validation passed, or
  * 'EXIT_FAILURE if validation failed.
@@ -101,8 +101,8 @@ static int	validate_game_map(t_game *game, int start_index)
 }
 
 /**
- *  * Parses map configuration lines until the map data is encounterd.
- * @param game Game state structure.
+ * @brief Parses map configuration lines until the map data is encounterd.
+ * @param game Pointer to the game structure containing map information.
  * @return 
  * Index where map data starts, or -1 on error.
  */
@@ -134,8 +134,8 @@ static int	parse_map_config(t_game *game)
 }
 
 /**
- * Validates the map and its congiguration.
- * @param game Game state struct.
+ * @brief Validates the map and its congiguration.
+ * @param game Pointer to the game structure containing map information.
  * @param map_file The path to the map file.
  * @return 'EXIT_SUCCESS' if validation passed, or
  * 'EXIT_FAILURE if validation failed.

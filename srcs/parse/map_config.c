@@ -6,14 +6,14 @@
 /*   By: hahamdan <hahamdan@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 17:03:09 by hahamdan          #+#    #+#             */
-/*   Updated: 2025/05/25 17:03:13 by hahamdan         ###   ########.fr       */
+/*   Updated: 2025/05/25 17:16:35 by hahamdan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/cub3d.h"
 
 /**
- * Checks the permission and validity of the texture file.
+ * @brief Checks the permission and validity of the texture file.
  * @param texture Path to texture file. 
  * @return An error code that inidicates the status of
  * the texture file check.
@@ -43,9 +43,9 @@ static int	check_file_permissions(char *texture)
 }
 
 /**
- * Validates and assign texture file for a given direction
+ * @brief Validates and assign texture file for a given direction
  * (e.g., "NO", "SO", "WE", "EA").
- * @param game Game state struct.
+ * @param game Pointer to the game structure containing map information.
  * @param texture Path to the texture file.
  * @param direction The texture identifier
  * @return 'EXIT_SUCCCES if the texture is assigned, or an error code
@@ -70,8 +70,8 @@ static int	check_texture(t_game *game, char *texture, char *direction)
 }
 
 /**
- * Validates and assign a color in RGB format.
- * @param game Game state struct.
+ * @brief Validates and assign a color in RGB format.
+ * @param game Pointer to the game structure containing map information.
  * @param color A string represntng the color in RGB format (e.g., "255, 0, 0").
  * @param c A character identifier ('F' for floor, 'C' for ceiling).
  * @return 'ERR_RGB' if the color format is invalid, or 'EXIT_SUCCESS'
@@ -100,8 +100,8 @@ static int	check_color(t_game *game, char *color, char c)
 }
 
 /**
- * Checks if a set element is duplicated.
- * @param game Game state struct. 
+ * @brief Checks if a set element is duplicated.
+ * @param game Pointer to the game structure containing map information
  * @param identifier The element identifier. 
  * @return ERR_DUP if the element is duplicated, EXIT_SUCCESS if not.
  */
@@ -123,8 +123,8 @@ static int	check_duplication(t_game *game, const char *identifier)
 }
 
 /**
- *  Assigns elements to the game state after validation.
- * @param game Game state struct.
+ * @brief Assigns elements to the game state after validation.
+ * @param game Pointer to the game structure containing map information.
  * @param identifier The element identifier.
  * @param line The element value.
  * @param arr An array contains the element identifier and its value.

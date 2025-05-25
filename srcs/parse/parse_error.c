@@ -6,14 +6,14 @@
 /*   By: hahamdan <hahamdan@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 17:03:46 by hahamdan          #+#    #+#             */
-/*   Updated: 2025/05/25 17:03:50 by hahamdan         ###   ########.fr       */
+/*   Updated: 2025/05/25 17:10:07 by hahamdan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/cub3d.h"
 
 /**
- * writes an error message based on the provided error code.
+ * @brief writes an error message based on the provided error code.
  * @param err An error code.
  * @return 'EXIT_FAILURE' to signal an error.
  */
@@ -47,7 +47,7 @@ int	map_error(int err)
 }
 
 /**
- * Writes an error message based on the provided error code.
+ * @brief Writes an error message based on the provided error code.
  * @param line A line from the configuration (if applicable).
  * @param err An error code.
  * @param element The name of the element involved in the error.
