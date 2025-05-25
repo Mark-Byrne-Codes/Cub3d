@@ -19,24 +19,28 @@
 # define MAP_START 1
 # define CONFIG_COUNT 6
 # define CONFIG_ERROR -1
+# define BYTES_PER_PIXEL 4
+# define HUGE_DIST 1e30
+# define MIN_DIST 0.0001
 
 # ifndef O_DIRECTORY
 #  define O_DIRECTORY 0200000
 # endif
 
+typedef struct s_vec
+{
+    double x;
+    double y;
+} t_vec;
+
 typedef struct s_ray
 {
-	double		dir_x;
-	double		dir_y;
-	int			map_x;
-	int			map_y;
-	double		side_dist_x;
-	double		side_dist_y;
-	double		delta_dist_x;
-	double		delta_dist_y;
+	t_vec		dir;
+	t_vec		map;
+	t_vec		side_dist;
+	t_vec		delta_dist;
+	t_vec		step;
 	double		perp_wall_dist;
-	int			step_x;
-	int			step_y;
 	int			hit;
 	int			side;
 	int			line_height;
@@ -44,17 +48,14 @@ typedef struct s_ray
 	int			draw_end;
 	int			tex_x;
 	double		tex_pos;
-	double		step;
+	double		step_tex;
 }				t_ray;
 
 typedef struct s_player
 {
-	double		pos_x;
-	double		pos_y;
-	double		dir_x;
-	double		dir_y;
-	double		plane_x;
-	double		plane_y;
+	t_vec		pos;
+	t_vec		dir;
+	t_vec		plane;
 }				t_player;
 
 typedef struct s_color
@@ -129,27 +130,30 @@ void			render_graphics(void *param);
 void			control_player(mlx_key_data_t keydata, void *param);
 void			clean_exit(t_game *game, char *msg);
 void			raycast(t_game *game);
+void			clamp_value(int *value, int min_val, int max_val);
+void			calc_draw_range(t_ray *r, int screen_h);
 mlx_image_t		*select_texture(t_game *game, t_ray *ray);
 int				calculate_tex_x(t_ray *ray, mlx_image_t *tex, t_player *player);
 void			draw_vertical_line(t_game *game, int x, t_ray *ray,
 					mlx_image_t *tex);
 mlx_image_t		*load_image(t_game *game, const char *path);
 uint32_t		create_rgba(t_color color);
-int				set_player_dir(t_game *game, char dir);
+t_vec			vec_rotate(t_vec v, double angle);
+void			set_player_dir(t_game *game, char dir);
 void			free_gnl(int fd);
 void			free_grid(char **split);
-int				assign_rgb(char *str);
 void			free_map(t_game *game);
 int				ft_comma(char *str);
 char			**duplicate_map(t_game *game);
-int				handle_map_error(int err);
-char			**trim_and_split(char *map_line);;
+int				config_error(char *line, int err, char *element);
+int				map_error(int err);
+char			**trim_and_split(char *map_line);
 int				return_error(t_game *game, char *msg);
+int				convert_rgb(char *str);
 int				read_map(t_game *game, char *argv);
 int				map_validation(t_game *game, char *map_file);
 int				get_player_position(t_game *game, int i);
 void			set_color(t_game *game, t_color rgb, char c);
-int				handle_config_error(char *line, int err, char *element);
 int				validate_identifier(char *id, char **arr);
 int				validate_map_layout(t_game *game);
 int				init_map_grid(t_game *game, int map_start_index);
