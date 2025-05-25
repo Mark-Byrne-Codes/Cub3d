@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_error.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hahamdan <hahamdan@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/25 17:03:46 by hahamdan          #+#    #+#             */
+/*   Updated: 2025/05/25 17:03:50 by hahamdan         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../include/cub3d.h"
 
 /**
@@ -59,7 +71,7 @@ int	config_error(char *line, int err, char *element)
 			ft_putstr_fd("Invalid color value(s): ",
 				STDERR_FILENO);
 		else if (err == ERR_DUP)
-			ft_putstr_fd("Found duplicate element definition: ", 2);
+			ft_putstr_fd("Found multiple element definition: ", 2);
 		else if (err == ERR_IS_DIR)
 			ft_putstr_fd("Texture path is a directory: ", STDERR_FILENO);
 		ft_putstr_fd(element, STDERR_FILENO);

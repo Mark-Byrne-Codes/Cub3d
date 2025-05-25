@@ -1,7 +1,9 @@
+
 NO ./assets/textures/north.png
 SO ./assets/textures/south.png
 WE ./assets/textures/west.png
 EA ./assets/textures/east.png
+
 
 F 20,20
 C 200,200,200

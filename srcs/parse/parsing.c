@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hahamdan <hahamdan@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/25 17:03:56 by hahamdan          #+#    #+#             */
+/*   Updated: 2025/05/25 17:04:00 by hahamdan         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../include/cub3d.h"
 
 /**
@@ -115,7 +127,7 @@ static int	parse_map_config(t_game *game)
 		if (status == MAP_START)
 			break ;
 		if (status == CONFIG_ERROR)
-			return (-1);
+			return (CONFIG_ERROR);
 		current_index++;
 	}
 	return (current_index);

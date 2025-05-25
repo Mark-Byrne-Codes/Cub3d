@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cub3d.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hahamdan <hahamdan@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/25 17:05:40 by hahamdan          #+#    #+#             */
+/*   Updated: 2025/05/25 17:07:07 by hahamdan         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef CUB3D_H
 # define CUB3D_H
 
@@ -6,7 +18,6 @@
 # include <fcntl.h>
 # include <math.h>
 # include <stdio.h>
-
 
 # define WIDTH 1920
 # define HEIGHT 1080
@@ -30,9 +41,9 @@
 
 typedef struct s_vec
 {
-    double x;
-    double y;
-} t_vec;
+	double		x;
+	double		y;
+}				t_vec;
 
 typedef struct s_ray
 {

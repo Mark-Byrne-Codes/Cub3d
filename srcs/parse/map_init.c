@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   map_init.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hahamdan <hahamdan@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/25 17:03:22 by hahamdan          #+#    #+#             */
+/*   Updated: 2025/05/25 17:03:36 by hahamdan         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../include/cub3d.h"
 
 static void	init_map_struct(t_game *game)
@@ -83,15 +95,15 @@ int	read_map(t_game *game, char *argv)
 	init_map_struct(game);
 	height = get_height(game, argv);
 	if (height == -1)
-		return (return_error(game, "Invalid map\n"));
+		return (return_error(game, "Empty file."));
 	game->map.map_grid = ft_calloc(height + 1, sizeof(char *));
 	if (!game->map.map_grid)
-		return (return_error(game, "Failed to allocate map grid"));
+		return (return_error(game, "Failed to allocate map grid."));
 	game->map.fd = open(argv, O_RDONLY);
 	if (game->map.fd == -1)
-		return (return_error(game, "Failed to open map file"));
+		return (return_error(game, "Failed to open map file."));
 	if (allocate_map_grid(game, height))
-		return (return_error(game, "Failed to allocate map"));
+		return (return_error(game, "Failed to allocate map."));
 	close(game->map.fd);
 	return (EXIT_SUCCESS);
 }
