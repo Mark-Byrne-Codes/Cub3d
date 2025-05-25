@@ -26,7 +26,7 @@ SRCS	:= srcs/main.c \
 			srcs/parse/parse_error.c \
 			srcs/parse/map_init.c \
 			srcs/parse/map_config.c \
-			srcs/parse/utils.c \
+			srcs/parse/map_utils.c \
 			srcs/parse/validate_map.c \
 			srcs/game/game_loop.c \
 			srcs/game/game_utils.c \
