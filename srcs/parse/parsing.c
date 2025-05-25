@@ -115,7 +115,7 @@ static int	parse_map_config(t_game *game)
 		if (status == MAP_START)
 			break ;
 		if (status == CONFIG_ERROR)
-			return (-1);
+			return (CONFIG_ERROR);
 		current_index++;
 	}
 	return (current_index);
