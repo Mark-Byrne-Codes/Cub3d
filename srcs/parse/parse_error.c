@@ -59,7 +59,7 @@ int	config_error(char *line, int err, char *element)
 			ft_putstr_fd("Invalid color value(s): ",
 				STDERR_FILENO);
 		else if (err == ERR_DUP)
-			ft_putstr_fd("Found duplicate element definition: ", 2);
+			ft_putstr_fd("Found multiple element definition: ", 2);
 		else if (err == ERR_IS_DIR)
 			ft_putstr_fd("Texture path is a directory: ", STDERR_FILENO);
 		ft_putstr_fd(element, STDERR_FILENO);
