@@ -1,13 +1,13 @@
-NO assets/wall4.png
-SO assets/exit.png
+NO assets/mossy.png
+SO assets/colorstone.png
 
 
 
 
 
 
-EA assets/east.png
-WE assets/west.png
+EA assets/greystone.png
+WE assets/eagle.png
 F 0,100,0
 C 0,0,230
 
@@ -17,7 +17,7 @@ C 0,0,230
 10001
 10001
 10001
-11001
+10001
 10001
 10001
 10001

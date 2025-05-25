@@ -28,11 +28,10 @@ SRCS	:= srcs/main.c \
 			srcs/parse/utils1.c \
 			srcs/parse/utils2.c \
 			srcs/parse/validate_map.c \
-			srcs/game/run_game.c \
-			srcs/game/init.c \
+			srcs/game/game_loop.c \
 			srcs/game/game_utils.c \
 			srcs/game/raycast_utils.c \
-			srcs/game/render.c \
+			srcs/game/graphics.c \
 			srcs/game/raycast.c \
    
 

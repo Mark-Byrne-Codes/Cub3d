@@ -128,6 +128,5 @@ int	validate_map_layout(t_game *game)
 			game->map.max_width))
 		return (free_grid(map_copy), ERR_OUT_MAP);
 	free_grid(map_copy);
-	printf("\033[1;32mMap validation successful!\033[0m\n");
 	return (EXIT_SUCCESS);
 }

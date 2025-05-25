@@ -83,7 +83,7 @@ int	read_map(t_game *game, char *argv)
 	init_map_struct(game);
 	height = get_height(game, argv);
 	if (height == -1)
-		return (return_error(game, "Invalid map"));
+		return (return_error(game, "Invalid map\n"));
 	game->map.map_grid = ft_calloc(height + 1, sizeof(char *));
 	if (!game->map.map_grid)
 		return (return_error(game, "Failed to allocate map grid"));
