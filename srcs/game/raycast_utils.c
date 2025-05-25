@@ -6,7 +6,7 @@
 /*   By: mbyrne <mbyrne@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 08:49:20 by mbyrne            #+#    #+#             */
-/*   Updated: 2025/05/25 14:36:14 by mbyrne           ###   ########.fr       */
+/*   Updated: 2025/05/25 17:09:17 by mbyrne           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,9 +107,9 @@ void	draw_vertical_line(t_game *g, int x, t_ray *ray, mlx_image_t *tex)
 	while (y < (int)g->img->height)
 	{
 		if (y < ray->draw_start)
-			color = create_rgba(g->graphics.ceiling_color);
+			color = g->graphics.ceiling_rgba;
 		else if (y > ray->draw_end)
-			color = create_rgba(g->graphics.floor_color);
+			color = g->graphics.floor_rgba;
 		else
 		{
 			color = get_pixel_color(tex, ray->tex_x,

@@ -1,23 +1,25 @@
-NO assets/mossy.png
-SO assets/colorstone.png
+NO assets/castle1.png
+SO assets/castle2.png
 
 
 
 
 
 
-EA assets/greystone.png
-WE assets/eagle.png
-F 0,100,0
-C 0,0,230
+EA assets/castle3.png
+WE assets/castle4.png
+
+
+F 100,100,110
+                                                C 0,0,100
 
 11111
 10001
-10S01
+10W01
 10001
 10001
 10001
-10001
+1001
 10001
 10001
 10001

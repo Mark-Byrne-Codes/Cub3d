@@ -6,7 +6,7 @@
 /*   By: mbyrne <mbyrne@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 08:49:15 by mbyrne            #+#    #+#             */
-/*   Updated: 2025/05/25 14:32:46 by mbyrne           ###   ########.fr       */
+/*   Updated: 2025/05/25 15:54:32 by mbyrne           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,25 +67,25 @@ void	set_player_dir(t_game *game, char dir)
 	{
 		game->player.dir.x = 0;
 		game->player.dir.y = -1;
-		game->player.plane.x = -0.66;
+		game->player.plane.x = -FOV;
 	}
 	else if (dir == 'S')
 	{
 		game->player.dir.x = 0;
 		game->player.dir.y = 1;
-		game->player.plane.x = 0.66;
+		game->player.plane.x = FOV;
 	}
 	else if (dir == 'E')
 	{
 		game->player.dir.x = 1;
 		game->player.dir.y = 0;
-		game->player.plane.y = -0.66;
+		game->player.plane.y = -FOV;
 	}
 	else if (dir == 'W')
 	{
 		game->player.dir.x = -1;
 		game->player.dir.y = 0;
-		game->player.plane.y = 0.66;
+		game->player.plane.y = FOV;
 	}
 }
 
