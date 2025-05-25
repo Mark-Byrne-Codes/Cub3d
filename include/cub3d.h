@@ -21,7 +21,7 @@
 
 # define WIDTH 1920
 # define HEIGHT 1080
-# define PI 3.14159265358979323846
+# define FOV 0.66
 # define MOVE_SPEED 0.1
 # define ROTATE_SPEED 0.2
 # define X_SIDE 0
@@ -33,6 +33,7 @@
 # define BYTES_PER_PIXEL 4
 # define HUGE_DIST 1e30
 # define MIN_DIST 0.0001
+# define TEXTURE_SIZE 64
 
 # ifndef O_DIRECTORY
 #  define O_DIRECTORY 0200000
@@ -84,6 +85,8 @@ typedef struct s_graphics
 	mlx_image_t	*east;
 	t_color		floor_color;
 	t_color		ceiling_color;
+	uint32_t	floor_rgba;
+	uint32_t	ceiling_rgba;
 }				t_graphics;
 
 typedef struct s_map

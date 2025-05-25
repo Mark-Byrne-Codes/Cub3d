@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   render.c                                           :+:      :+:    :+:   */
+/*   graphics.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mbyrne <mbyrne@student.hive.fi>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/22 08:49:27 by mbyrne            #+#    #+#             */
-/*   Updated: 2025/05/25 14:27:04 by mbyrne           ###   ########.fr       */
+/*   Updated: 2025/05/25 17:13:42 by mbyrne           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,22 +55,15 @@ int	init_game(t_game *game)
 		return (1);
 	game->player.pos.x = game->map.player_x + 0.5;
 	game->player.pos.y = game->map.player_y + 0.5;
-	game->player.dir.x = 0;
-	game->player.dir.y = 0;
-	game->player.plane.x = 0;
-	game->player.plane.y = 0;
+	game->graphics.floor_rgba = create_rgba(game->graphics.floor_color);
+	game->graphics.ceiling_rgba = create_rgba(game->graphics.ceiling_color);
 	game->graphics.north = load_image(game, game->map.north_texture);
 	game->graphics.south = load_image(game, game->map.south_texture);
 	game->graphics.east = load_image(game, game->map.east_texture);
 	game->graphics.west = load_image(game, game->map.west_texture);
 	set_player_dir(game, game->map.start_dir);
 	if (mlx_image_to_window(game->mlx, game->img, 0, 0) == -1)
-	{
-		mlx_delete_image(game->mlx, game->img);
-		mlx_terminate(game->mlx);
-		ft_putstr_fd("Error\nFailed to put image to window\n", 2);
-		return (1);
-	}
+		clean_exit(game, "Failed to draw image to window\n");
 	return (0);
 }
 
@@ -118,6 +111,11 @@ mlx_image_t	*load_image(t_game *game, const char *path)
 	mlx_delete_texture(texture);
 	if (!image)
 		clean_exit(game, "Failed to convert texture to image\n");
+	if (!mlx_resize_image(image, TEXTURE_SIZE, TEXTURE_SIZE))
+	{
+		mlx_delete_image(game->mlx, image);
+		clean_exit(game, "Failed to resize texture\n");
+	}
 	return (image);
 }
 
